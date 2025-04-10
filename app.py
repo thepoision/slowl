@@ -5,13 +5,12 @@ import google.generativeai as genai
 import os
 import json
 import datetime
-import pandas as pd
 
 # --- Gemini Flash 2.0 API Key ---
 genai.configure(api_key="AIzaSyD3eVlWuVn1dYep2XOW3OaI6_g6oBy38Uk")
 model = genai.GenerativeModel("gemini-2.0-flash")
 
-# --- Load Local Bangkok Data ---
+# --- Load Bangkok Data ---
 @st.cache_data
 def load_data():
     with open("bangkok_data.json", "r") as f:
@@ -136,15 +135,19 @@ else:
         if user_input:
             context = st.session_state.user_context
 
-            def format_data_snippet(data, type_filter=None):
-                items = [d for d in data if not type_filter or d['type'] == type_filter]
+            def format_data_snippet(data):
                 return "\n".join([
-                    f"- {item['name']}: {item['type'].title()}, {item['location']}, "
+                    f"- {item['name']} ({item['type'].title()}), {item['location']}, "
                     f"Price: {item['price']}, Rating: {item['rating']}, Tags: {', '.join(item['tags'])}"
-                    for item in items
+                    for item in data
                 ])
 
             data_snippet = format_data_snippet(local_data)
+
+            # Include previous chat memory (last 6)
+            past_chat = ""
+            for chat in st.session_state.chat_history[-6:]:
+                past_chat += f"User: {chat['user']}\nAI Bro: {chat['assistant']}\n"
 
             prompt = f"""
 You're a helpful and chill AI travel bro for someone visiting Bangkok.
@@ -158,9 +161,12 @@ User preferences:
 - Budget: {context['budget']} THB
 - Travel Dates: {context['start_date']} to {context['end_date']}
 
-User question: {user_input}
+Chat so far:
+{past_chat}
 
-Respond in {context['language']}. Use casual language, drop suggestions, jokes, and street tips.
+User: {user_input}
+
+Respond in {context['language']}. Use casual language, keep it in flow, remember the thread. You're smart, funny, and know Bangkok like the back of your tuk-tuk.
 """
 
             with st.spinner("Your bro is thinking... 💭"):
