@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Backpack Hostel BKK",
+    "type": "stay",
+    "location": "Khao San Road",
+    "price": "cheap",
+    "rating": 4.3,
+    "tags": ["backpacker", "budget", "hostel"]
+  },
+  {
+    "name": "Rambuttri Village Inn",
+    "type": "stay",
+    "location": "Old Town",
+    "price": "moderate",
+    "rating": 4.0,
+    "tags": ["pool", "wifi", "family-friendly"]
+  },
+  {
+    "name": "Cheap Veggie Hut",
+    "type": "eat",
+    "location": "Chatuchak",
+    "price": "cheap",
+    "rating": 4.2,
+    "tags": ["vegetarian", "local", "budget"]
+  },
+  {
+    "name": "Jay Fai",
+    "type": "eat",
+    "location": "Old Town",
+    "price": "expensive",
+    "rating": 4.8,
+    "tags": ["michelin", "seafood", "spicy"]
+  },
+  {
+    "name": "Bangkok Night Market Tour",
+    "type": "experience",
+    "location": "Ratchada",
+    "price": "moderate",
+    "rating": 4.6,
+    "tags": ["market", "nightlife", "local"]
+  },
+  {
+    "name": "Floating Market Day Trip",
+    "type": "experience",
+    "location": "Amphawa",
+    "price": "cheap",
+    "rating": 4.5,
+    "tags": ["boat", "street food", "culture"]
+  }
+]
