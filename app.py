@@ -1,4 +1,6 @@
 import streamlit as st
+st.set_page_config(page_title="Bangkok Travel Bro", page_icon="🧢", layout="centered")
+
 import google.generativeai as genai
 import os
 import json
@@ -58,9 +60,6 @@ def greet_user():
         return "☀️ Good afternoon, adventurer!"
     else:
         return "🌙 Evening vibes, wanderer!"
-
-# --- Streamlit Config ---
-st.set_page_config(page_title="Bangkok Travel Bro", page_icon="🧢", layout="centered")
 
 # --- Auth State ---
 if "authenticated" not in st.session_state:
@@ -137,7 +136,6 @@ else:
         if user_input:
             context = st.session_state.user_context
 
-            # Format local dataset into readable lines
             def format_data_snippet(data, type_filter=None):
                 items = [d for d in data if not type_filter or d['type'] == type_filter]
                 return "\n".join([
