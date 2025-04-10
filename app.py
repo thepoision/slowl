@@ -4,11 +4,11 @@ import os
 import json
 import datetime
 
-# --- Setup Gemini API ---
-genai.configure(api_key="AIzaSyD3eVlWuVn1dYep2XOW3OaI6_g6oBy38Uk")  # Replace with your real API key
+# --- Gemini Flash 2.0 API Key ---
+genai.configure(api_key="AIzaSyD3eVlWuVn1dYep2XOW3OaI6_g6oBy38Uk")
 model = genai.GenerativeModel("gemini-2.0-flash")
 
-# --- User Database Setup ---
+# --- User DB ---
 USER_DB_PATH = "users.json"
 if not os.path.exists(USER_DB_PATH):
     with open(USER_DB_PATH, "w") as f:
@@ -28,7 +28,7 @@ def authenticate(email, password):
     users = load_users()
     return email in users and users[email]["password"] == password
 
-# --- Chat Logging ---
+# --- Chat Save ---
 def save_convo(email, convo):
     os.makedirs("chat_logs", exist_ok=True)
     filename = f"chat_logs/{email.replace('@','_at_')}.json"
@@ -50,20 +50,26 @@ def greet_user():
     else:
         return "🌙 Evening vibes, wanderer!"
 
-# --- Streamlit Setup ---
-st.set_page_config(page_title="Bangkok Travel Bro", page_icon="🧢")
+# --- Streamlit Config ---
+st.set_page_config(page_title="Bangkok Travel Bro", page_icon="🧢", layout="centered")
 
-# --- Auth Flow ---
+# --- Auth ---
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
+# --- Login/Register Page ---
 if not st.session_state.authenticated:
-    st.title("🧢 Bangkok Travel Bro Login")
-    st.markdown("Login or Register to plan your epic trip 🌍")
-    email = st.text_input("📧 Email")
-    password = st.text_input("🔑 Password", type="password")
-    login_btn = st.button("🚪 Login")
-    register_btn = st.button("📝 Register")
+    st.markdown("<h1 style='text-align: center;'>🧢 Bangkok Travel Bro</h1>", unsafe_allow_html=True)
+    st.markdown("#### 🚀 Sign in to start planning your Bangkok adventure!")
+
+    with st.container():
+        email = st.text_input("📧 Email", placeholder="Enter your email")
+        password = st.text_input("🔑 Password", placeholder="Enter password", type="password")
+        col1, col2 = st.columns(2)
+        with col1:
+            login_btn = st.button("🚪 Login")
+        with col2:
+            register_btn = st.button("📝 Register")
 
     if login_btn:
         if authenticate(email, password):
@@ -71,39 +77,50 @@ if not st.session_state.authenticated:
             st.session_state.email = email
             st.success("You're in, bro! 🎉")
         else:
-            st.error("Oops, wrong credentials 💀")
+            st.error("Wrong email or password 💀")
 
     if register_btn:
         save_user(email, password)
-        st.success("You're all set! Now login and let’s goooo 🚀")
+        st.success("Boom. You're registered. Now log in! 🔓")
 
+# --- Main App After Login ---
 else:
-    # --- Main Travel Planner ---
-    st.title("🛫 Bangkok Travel Bro 🧢")
-    st.markdown(f"### {greet_user()} Let's get your trip lit 🔥")
+    st.markdown("<h1 style='text-align: center;'>🏝️ Plan Your Trip With Your AI Bro</h1>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='text-align: center;'>{greet_user()}</h3>", unsafe_allow_html=True)
+    st.markdown("---")
 
     if "user_context" not in st.session_state:
+        st.markdown("#### 🌍 Tell me a bit about your trip:")
         with st.form("user_info"):
-            language = st.selectbox("🌍 Pick your language, legend:", 
-                                    ["English 🇬🇧", "Malay 🇲🇾", "Hindi 🇮🇳", "Chinese 🇨🇳"])
-            budget = st.number_input("💸 Your total budget (in THB)", min_value=1000)
-            start_date = st.date_input("🗓️ Start Date")
-            end_date = st.date_input("🗓️ End Date")
-            submit = st.form_submit_button("Save & Start Chat 💬")
+            col1, col2 = st.columns(2)
+            with col1:
+                language = st.selectbox("🌐 Preferred Language", 
+                                        ["English 🇬🇧", "Malay 🇲🇾", "Hindi 🇮🇳", "Chinese 🇨🇳"])
+            with col2:
+                budget = st.number_input("💰 Your Budget (THB)", min_value=1000)
 
-            if submit:
+            col3, col4 = st.columns(2)
+            with col3:
+                start_date = st.date_input("📅 Start Date")
+            with col4:
+                end_date = st.date_input("📅 End Date")
+
+            submitted = st.form_submit_button("✅ Save Trip Info")
+
+            if submitted:
                 st.session_state.user_context = {
                     "language": language.split()[0],
                     "budget": budget,
                     "start_date": str(start_date),
                     "end_date": str(end_date),
                 }
-                st.success("Preferences saved! Let’s goooo 🎉")
+                st.success("All set! Let’s chat 🤙")
                 st.balloons()
 
     if "user_context" in st.session_state:
-        st.markdown("### 🧠 Ask me anything about Bangkok:")
-        user_input = st.chat_input("Yo bro, what’s on your travel mind?")
+        st.markdown("### 💬 Ask me anything about Bangkok:")
+
+        user_input = st.chat_input("Type here, bro...")
 
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
@@ -125,12 +142,12 @@ Suggest cool places, street food, budget hacks, nightlife — anything they ask.
 User: {user_input}
 """
 
-            with st.spinner("Your AI bro is thinking... 🤔"):
+            with st.spinner("Your bro is thinking... 💭"):
                 response = model.generate_content(prompt)
                 reply = response.text
 
-            st.chat_message("user").write(user_input)
-            st.chat_message("assistant").write(reply)
+            st.chat_message("user").markdown(user_input)
+            st.chat_message("assistant").markdown(reply)
 
             st.session_state.chat_history.append({
                 "user": user_input,
@@ -138,4 +155,5 @@ User: {user_input}
             })
 
             save_convo(st.session_state.email, st.session_state.chat_history)
-            st.toast("💾 Chat saved!")
+            st.toast("💾 Saved that convo, bro!")
+
