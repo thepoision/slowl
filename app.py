@@ -4,7 +4,7 @@ import google.generativeai as genai
 # Gemini API key (temporary, for learning only)
 genai.configure(api_key="AIzaSyD3eVlWuVn1dYep2XOW3OaI6_g6oBy38Uk")
 
-model = genai.GenerativeModel('gemini-pro')
+model = genai.GenerativeModel('gemini-2.0-flash')
 
 st.set_page_config(page_title="Bangkok Travel Assistant", page_icon="🌏")
 st.title("🌆 Bangkok Travel Assistant")
