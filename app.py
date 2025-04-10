@@ -1,5 +1,5 @@
 import streamlit as st
-st.set_page_config(page_title="Bangkok Travel Bro", page_icon="🧢", layout="centered")
+st.set_page_config(page_title="Bangkok Travel Bro", page_icon="🧲", layout="centered")
 
 import google.generativeai as genai
 import os
@@ -66,7 +66,7 @@ if "authenticated" not in st.session_state:
 
 # --- Login/Register Page ---
 if not st.session_state.authenticated:
-    st.markdown("<h1 style='text-align: center;'>🧢 Bangkok Travel Bro</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>🧲 Bangkok Travel Bro</h1>", unsafe_allow_html=True)
     st.markdown("#### 🚀 Sign in to start planning your Bangkok adventure!")
 
     with st.container():
@@ -92,7 +92,7 @@ if not st.session_state.authenticated:
 
 # --- Main App After Login ---
 else:
-    st.markdown("<h1 style='text-align: center;'>🏝️ Plan Your Trip With Your AI Bro</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>🏕️ Plan Your Trip With Your AI Bro</h1>", unsafe_allow_html=True)
     st.markdown(f"<h3 style='text-align: center;'>{greet_user()}</h3>", unsafe_allow_html=True)
     st.markdown("---")
 
@@ -143,10 +143,18 @@ else:
                     f"Price: {item.get('price', item.get('price_per_night', 'N/A'))}, "
                     f"Rating: {item.get('rating', 'N/A')}, "
                     f"Tags: {', '.join(item.get('tags', []))}"
-                    for item in data
+                    for item in data if isinstance(item, dict)
                 ])
 
-            data_snippet = format_data_snippet(local_data)
+            all_items = []
+            for category, items in local_data.items():
+                for item in items:
+                    if isinstance(item, dict):
+                        if "type" not in item:
+                            item["type"] = category.lower()
+                        all_items.append(item)
+
+            data_snippet = format_data_snippet(all_items)
 
             past_chat = ""
             for chat in st.session_state.chat_history[-6:]:
