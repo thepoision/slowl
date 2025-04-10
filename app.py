@@ -1,5 +1,5 @@
 import streamlit as st
-st.set_page_config(page_title="Bangkok Travel Bro", page_icon="🧲", layout="centered")
+st.set_page_config(page_title="Bangkok Travel Bro", page_icon="🧢", layout="centered")
 
 import google.generativeai as genai
 import os
@@ -66,7 +66,7 @@ if "authenticated" not in st.session_state:
 
 # --- Login/Register Page ---
 if not st.session_state.authenticated:
-    st.markdown("<h1 style='text-align: center;'>🧲 Bangkok Travel Bro</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>🧢 Bangkok Travel Bro</h1>", unsafe_allow_html=True)
     st.markdown("#### 🚀 Sign in to start planning your Bangkok adventure!")
 
     with st.container():
@@ -92,7 +92,7 @@ if not st.session_state.authenticated:
 
 # --- Main App After Login ---
 else:
-    st.markdown("<h1 style='text-align: center;'>🏕️ Plan Your Trip With Your AI Bro</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>🏝️ Plan Your Trip With Your AI Bro</h1>", unsafe_allow_html=True)
     st.markdown(f"<h3 style='text-align: center;'>{greet_user()}</h3>", unsafe_allow_html=True)
     st.markdown("---")
 
@@ -132,29 +132,36 @@ else:
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
 
+        def format_data_snippet(data):
+            snippets = []
+            for item in data:
+                name = item.get('name', 'Unnamed')
+                type_ = item.get('type', 'Unknown').title()
+                location = item.get('location', 'Unknown')
+                price = item.get('price', item.get('price_per_night', 'N/A'))
+                rating = item.get('rating', 'N/A')
+                tags = ", ".join(item.get('tags', []))
+                snippets.append(f"- {name} ({type_}), {location}, Price: {price}, Rating: {rating}, Tags: {tags}")
+            return "\n".join(snippets)
+
+        def show_structured_ui(items):
+            for item in items:
+                with st.container(border=True):
+                    st.markdown(f"### 🏨 {item.get('name', 'Unnamed')}")
+                    cols = st.columns(2)
+                    with cols[0]:
+                        st.write(f"📍 Location: {item.get('location', 'Unknown')}")
+                        st.write(f"💸 Price: {item.get('price', item.get('price_per_night', 'N/A'))} THB")
+                    with cols[1]:
+                        st.write(f"⭐ Rating: {item.get('rating', 'N/A')}")
+                        tags = ", ".join(item.get('tags', []))
+                        if tags:
+                            st.write(f"🏷️ Tags: {tags}")
+                    st.button("🔗 Book Now", key=item.get('name', '') + '_book')
+
         if user_input:
             context = st.session_state.user_context
-
-            def format_data_snippet(data):
-                return "\n".join([
-                    f"- {item.get('name', 'Unnamed')} "
-                    f"({item.get('type', 'Unknown').title()}), "
-                    f"{item.get('location', 'Unknown')}, "
-                    f"Price: {item.get('price', item.get('price_per_night', 'N/A'))}, "
-                    f"Rating: {item.get('rating', 'N/A')}, "
-                    f"Tags: {', '.join(item.get('tags', []))}"
-                    for item in data if isinstance(item, dict)
-                ])
-
-            all_items = []
-            for category, items in local_data.items():
-                for item in items:
-                    if isinstance(item, dict):
-                        if "type" not in item:
-                            item["type"] = category.lower()
-                        all_items.append(item)
-
-            data_snippet = format_data_snippet(all_items)
+            data_snippet = format_data_snippet(local_data.get("Stay", []))
 
             past_chat = ""
             for chat in st.session_state.chat_history[-6:]:
@@ -178,6 +185,7 @@ Chat so far:
 User: {user_input}
 
 Respond in {context['language']}. Use casual language, keep it in flow, remember the thread. You're smart, funny, and know Bangkok like the back of your tuk-tuk.
+If user asks for stays/hotels/hostels, show short summary and THEN structured card UI for each result.
 """
 
             with st.spinner("Your bro is thinking... 💭"):
@@ -185,7 +193,12 @@ Respond in {context['language']}. Use casual language, keep it in flow, remember
                 reply = response.text
 
             st.chat_message("user").markdown(user_input)
-            st.chat_message("assistant").markdown(reply)
+
+            if any(keyword in user_input.lower() for keyword in ["hotel", "stay", "hostel"]):
+                st.chat_message("assistant").markdown(reply.split("\n")[0])  # top summary para
+                show_structured_ui(local_data.get("Stay", []))
+            else:
+                st.chat_message("assistant").markdown(reply)
 
             st.session_state.chat_history.append({
                 "user": user_input,
