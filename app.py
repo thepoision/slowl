@@ -132,15 +132,17 @@ else:
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
 
-        if user_input:
-            context = st.session_state.user_context
+def format_data_snippet(data):
+    return "\n".join([
+        f"- {item.get('name', 'Unnamed')} "
+        f"({item.get('type', 'Unknown').title()}), "
+        f"{item.get('location', 'Unknown')}, "
+        f"Price: {item.get('price', item.get('price_per_night', 'N/A'))}, "
+        f"Rating: {item.get('rating', 'N/A')}, "
+        f"Tags: {', '.join(item.get('tags', []))}"
+        for item in data
+    ])
 
-            def format_data_snippet(data):
-                return "\n".join([
-                    f"- {item['name']} ({item['type'].title()}), {item['location']}, "
-                    f"Price: {item['price']}, Rating: {item['rating']}, Tags: {', '.join(item['tags'])}"
-                    for item in data
-                ])
 
             data_snippet = format_data_snippet(local_data)
 
