@@ -132,21 +132,22 @@ else:
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
 
-def format_data_snippet(data):
-    return "\n".join([
-        f"- {item.get('name', 'Unnamed')} "
-        f"({item.get('type', 'Unknown').title()}), "
-        f"{item.get('location', 'Unknown')}, "
-        f"Price: {item.get('price', item.get('price_per_night', 'N/A'))}, "
-        f"Rating: {item.get('rating', 'N/A')}, "
-        f"Tags: {', '.join(item.get('tags', []))}"
-        for item in data
-    ])
+        if user_input:
+            context = st.session_state.user_context
 
+            def format_data_snippet(data):
+                return "\n".join([
+                    f"- {item.get('name', 'Unnamed')} "
+                    f"({item.get('type', 'Unknown').title()}), "
+                    f"{item.get('location', 'Unknown')}, "
+                    f"Price: {item.get('price', item.get('price_per_night', 'N/A'))}, "
+                    f"Rating: {item.get('rating', 'N/A')}, "
+                    f"Tags: {', '.join(item.get('tags', []))}"
+                    for item in data
+                ])
 
             data_snippet = format_data_snippet(local_data)
 
-            # Include previous chat memory (last 6)
             past_chat = ""
             for chat in st.session_state.chat_history[-6:]:
                 past_chat += f"User: {chat['user']}\nAI Bro: {chat['assistant']}\n"
