@@ -3,10 +3,19 @@ import google.generativeai as genai
 import os
 import json
 import datetime
+import pandas as pd
 
 # --- Gemini Flash 2.0 API Key ---
 genai.configure(api_key="AIzaSyD3eVlWuVn1dYep2XOW3OaI6_g6oBy38Uk")
 model = genai.GenerativeModel("gemini-2.0-flash")
+
+# --- Load Local Bangkok Data ---
+@st.cache_data
+def load_data():
+    with open("bangkok_data.json", "r") as f:
+        return json.load(f)
+
+local_data = load_data()
 
 # --- User DB ---
 USER_DB_PATH = "users.json"
@@ -53,7 +62,7 @@ def greet_user():
 # --- Streamlit Config ---
 st.set_page_config(page_title="Bangkok Travel Bro", page_icon="🧢", layout="centered")
 
-# --- Auth ---
+# --- Auth State ---
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
@@ -128,18 +137,32 @@ else:
         if user_input:
             context = st.session_state.user_context
 
-            prompt = f"""
-You're a super chill and helpful AI travel bro helping someone plan their trip to Bangkok.
+            # Format local dataset into readable lines
+            def format_data_snippet(data, type_filter=None):
+                items = [d for d in data if not type_filter or d['type'] == type_filter]
+                return "\n".join([
+                    f"- {item['name']}: {item['type'].title()}, {item['location']}, "
+                    f"Price: {item['price']}, Rating: {item['rating']}, Tags: {', '.join(item['tags'])}"
+                    for item in items
+                ])
 
-User details:
+            data_snippet = format_data_snippet(local_data)
+
+            prompt = f"""
+You're a helpful and chill AI travel bro for someone visiting Bangkok.
+
+ONLY use this data when recommending places:
+
+{data_snippet}
+
+User preferences:
 - Language: {context['language']}
 - Budget: {context['budget']} THB
 - Travel Dates: {context['start_date']} to {context['end_date']}
 
-Respond in {context['language']}. Be friendly, drop light jokes, sound like a local buddy. 
-Suggest cool places, street food, budget hacks, nightlife — anything they ask. Make it fun but helpful.
+User question: {user_input}
 
-User: {user_input}
+Respond in {context['language']}. Use casual language, drop suggestions, jokes, and street tips.
 """
 
             with st.spinner("Your bro is thinking... 💭"):
@@ -156,4 +179,3 @@ User: {user_input}
 
             save_convo(st.session_state.email, st.session_state.chat_history)
             st.toast("💾 Saved that convo, bro!")
-
