@@ -128,6 +128,12 @@ else:
     if "user_context" in st.session_state:
         st.markdown("### 💬 Ask me anything about Bangkok:")
 
+        with st.expander("📜 View Chat History", expanded=False):
+            for i, chat in enumerate(reversed(st.session_state.chat_history[-20:]), 1):
+                st.markdown(f"**Q{i}:** {chat['user']}")
+                st.markdown(f"<span style='color: gray;'>A{i}: {chat['assistant']}</span>", unsafe_allow_html=True)
+                st.markdown("---")
+
         user_input = st.chat_input("Type here, bro...")
 
         if "chat_history" not in st.session_state:
