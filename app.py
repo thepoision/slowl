@@ -132,36 +132,21 @@ else:
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
 
-        def format_data_snippet(data):
-            snippets = []
-            for item in data:
-                name = item.get('name', 'Unnamed')
-                type_ = item.get('type', 'Unknown').title()
-                location = item.get('location', 'Unknown')
-                price = item.get('price', item.get('price_per_night', 'N/A'))
-                rating = item.get('rating', 'N/A')
-                tags = ", ".join(item.get('tags', []))
-                snippets.append(f"- {name} ({type_}), {location}, Price: {price}, Rating: {rating}, Tags: {tags}")
-            return "\n".join(snippets)
-
-        def show_structured_ui(items):
-            for item in items:
-                with st.container(border=True):
-                    st.markdown(f"### 🏨 {item.get('name', 'Unnamed')}")
-                    cols = st.columns(2)
-                    with cols[0]:
-                        st.write(f"📍 Location: {item.get('location', 'Unknown')}")
-                        st.write(f"💸 Price: {item.get('price', item.get('price_per_night', 'N/A'))} THB")
-                    with cols[1]:
-                        st.write(f"⭐ Rating: {item.get('rating', 'N/A')}")
-                        tags = ", ".join(item.get('tags', []))
-                        if tags:
-                            st.write(f"🏷️ Tags: {tags}")
-                    st.button("🔗 Book Now", key=item.get('name', '') + '_book')
-
         if user_input:
             context = st.session_state.user_context
-            data_snippet = format_data_snippet(local_data.get("Stay", []))
+
+            def format_data_snippet(data):
+                all_items = []
+                for category, items in data.items():
+                    for item in items:
+                        all_items.append(
+                            f"- {item.get('name', 'Unnamed')} ({item.get('type', 'Unknown').title()}), "
+                            f"{item.get('location', 'Unknown')}, Price: {item.get('price', item.get('price_per_night', 'N/A'))}, "
+                            f"Rating: {item.get('rating', 'N/A')}, Tags: {', '.join(item.get('tags', []))}"
+                        )
+                return "\n".join(all_items)
+
+            data_snippet = format_data_snippet(local_data)
 
             past_chat = ""
             for chat in st.session_state.chat_history[-6:]:
@@ -169,9 +154,12 @@ else:
 
             prompt = f"""
 You're a helpful and chill AI travel bro for someone visiting Bangkok.
+If it's appropriate, show a brief intro paragraph followed by a list of recommendations.
+Use this format when showing structured results:
+{{"cards": [{{"name": "Name", "price": 250, "rating": 4.3, "location": "Area", "type": "hostel", "button": "Book Now"}}]}}
+Otherwise, respond casually with plain text.
 
 ONLY use this data when recommending places:
-
 {data_snippet}
 
 User preferences:
@@ -184,8 +172,7 @@ Chat so far:
 
 User: {user_input}
 
-Respond in {context['language']}. Use casual language, keep it in flow, remember the thread. You're smart, funny, and know Bangkok like the back of your tuk-tuk.
-If user asks for stays/hotels/hostels, show short summary and THEN structured card UI for each result.
+Respond in {context['language']}. Be smart, friendly, casual. Keep the flow. Decide when to show structured responses.
 """
 
             with st.spinner("Your bro is thinking... 💭"):
@@ -194,10 +181,24 @@ If user asks for stays/hotels/hostels, show short summary and THEN structured ca
 
             st.chat_message("user").markdown(user_input)
 
-            if any(keyword in user_input.lower() for keyword in ["hotel", "stay", "hostel"]):
-                st.chat_message("assistant").markdown(reply.split("\n")[0])  # top summary para
-                show_structured_ui(local_data.get("Stay", []))
-            else:
+            try:
+                parsed = json.loads(reply)
+                if "cards" in parsed:
+                    st.markdown("**Here are some awesome picks for you:**")
+                    for card in parsed["cards"]:
+                        with st.container(border=True):
+                            st.markdown(f"### {card['name']}")
+                            col1, col2 = st.columns(2)
+                            with col1:
+                                st.markdown(f"**Location:** {card['location']}")
+                                st.markdown(f"**Type:** {card['type'].title()}")
+                            with col2:
+                                st.markdown(f"**Price:** {card['price']} THB")
+                                st.markdown(f"**Rating:** {card['rating']} ⭐")
+                            st.button(card.get("button", "Select"), key=card['name'])
+                else:
+                    st.chat_message("assistant").markdown(reply)
+            except:
                 st.chat_message("assistant").markdown(reply)
 
             st.session_state.chat_history.append({
