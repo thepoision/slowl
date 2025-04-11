@@ -5,6 +5,7 @@ import google.generativeai as genai
 import os
 import json
 import datetime
+import re
 
 # --- Gemini Flash 2.0 API Key ---
 genai.configure(api_key="AIzaSyD3eVlWuVn1dYep2XOW3OaI6_g6oBy38Uk")
@@ -182,8 +183,12 @@ Respond in {context['language']}. Be smart, friendly, casual. Keep the flow. Dec
             st.chat_message("user").markdown(user_input)
 
             try:
-                parsed = json.loads(reply)
-                if "cards" in parsed:
+                card_json_match = re.search(r'\{.*"cards"\s*:\s*\[.*\]\s*\}', reply, re.DOTALL)
+                if card_json_match:
+                    parsed = json.loads(card_json_match.group())
+                    intro_text = reply.split(card_json_match.group())[0].strip()
+                    if intro_text:
+                        st.chat_message("assistant").markdown(intro_text)
                     st.markdown("**Here are some awesome picks for you:**")
                     for card in parsed["cards"]:
                         with st.container(border=True):
@@ -198,7 +203,7 @@ Respond in {context['language']}. Be smart, friendly, casual. Keep the flow. Dec
                             st.button(card.get("button", "Select"), key=card['name'])
                 else:
                     st.chat_message("assistant").markdown(reply)
-            except:
+            except Exception as e:
                 st.chat_message("assistant").markdown(reply)
 
             st.session_state.chat_history.append({
