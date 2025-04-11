@@ -1,80 +1,142 @@
-{
-  "Stay": [
-    {
-      "name": "Baan Sukhumvit Inn",
-      "type": "guesthouse",
-      "location": "Sukhumvit",
-      "price_per_night": 400,
-      "rating": 4.1
-    },
-    {
-      "name": "The Peninsula Bangkok",
-      "type": "hotel",
-      "location": "Riverside",
-      "price_per_night": 9200,
-      "rating": 4.9
-    },
-    {
-      "name": "NapPark Hostel",
-      "type": "hostel",
-      "location": "Khao San",
-      "price_per_night": 250,
-      "rating": 4.3
-    },
-    {
-      "name": "Novotel Bangkok Siam Square",
-      "type": "hotel",
-      "location": "Siam",
-      "price_per_night": 2700,
-      "rating": 4.2
-    },
-    {
-      "name": "Amari Watergate Bangkok",
-      "type": "hotel",
-      "location": "Pratunam",
-      "price_per_night": 3200,
-      "rating": 4.5
-    },
-    {
-      "name": "The Yard Hostel",
-      "type": "hostel",
-      "location": "Ari",
-      "price_per_night": 350,
-      "rating": 4.6
-    },
-    {
-      "name": "SO/ Bangkok",
-      "type": "hotel",
-      "location": "Lumphini",
-      "price_per_night": 5500,
-      "rating": 4.7
-    },
-    {
-      "name": "Chao Hostel",
-      "type": "hostel",
-      "location": "Siam",
-      "price_per_night": 450,
-      "rating": 4.0
-    },
-    {
-      "name": "Anantara Riverside Bangkok Resort",
-      "type": "hotel",
-      "location": "Riverside",
-      "price_per_night": 7100,
-      "rating": 4.8
-    },
-    {
-      "name": "Sleep Owl Hostel",
-      "type": "hostel",
-      "location": "Don Mueang",
-      "price_per_night": 280,
-      "rating": 3.9
-    }
-  ],
-  "Eat & Drink": [],
-  "Things To Do": [],
-  "Shopping": [],
-  "Nightlife": [],
-  "Essentials": [],
-  "Everyday Essentials": []
-}
+[
+  {
+    "name": "Baan Sukhumvit Inn",
+    "type": "guesthouse",
+    "location": "Sukhumvit",
+    "price_per_night": 400,
+    "rating": 4.1,
+    "facilities": ["wifi", "AC"],
+    "booking_link": "https://example.com/baan-sukhumvit"
+  },
+  {
+    "name": "The Peninsula Bangkok",
+    "type": "hotel",
+    "location": "Riverside",
+    "price_per_night": 9200,
+    "rating": 4.9,
+    "facilities": ["pool", "spa", "wifi", "fitness center"],
+    "booking_link": "https://example.com/peninsula-bangkok"
+  },
+  {
+    "name": "NapPark Hostel",
+    "type": "hostel",
+    "location": "Khao San",
+    "price_per_night": 250,
+    "rating": 4.3,
+    "facilities": ["wifi", "shared kitchen"],
+    "booking_link": "https://example.com/nappark"
+  },
+  {
+    "name": "Novotel Bangkok Siam Square",
+    "type": "hotel",
+    "location": "Siam",
+    "price_per_night": 2700,
+    "rating": 4.2,
+    "facilities": ["wifi", "pool", "gym"],
+    "booking_link": "https://example.com/novotel-siam"
+  },
+  {
+    "name": "Amari Watergate Bangkok",
+    "type": "hotel",
+    "location": "Pratunam",
+    "price_per_night": 3200,
+    "rating": 4.5,
+    "facilities": ["wifi", "spa", "pool"],
+    "booking_link": "https://example.com/amari-watergate"
+  },
+  {
+    "name": "The Yard Hostel",
+    "type": "hostel",
+    "location": "Ari",
+    "price_per_night": 350,
+    "rating": 4.6,
+    "facilities": ["wifi", "garden"],
+    "booking_link": "https://example.com/yard-hostel"
+  },
+  {
+    "name": "SO/ Bangkok",
+    "type": "hotel",
+    "location": "Lumphini",
+    "price_per_night": 5500,
+    "rating": 4.7,
+    "facilities": ["wifi", "pool", "spa", "sky bar"],
+    "booking_link": "https://example.com/so-bangkok"
+  },
+  {
+    "name": "Chao Hostel",
+    "type": "hostel",
+    "location": "Siam",
+    "price_per_night": 450,
+    "rating": 4.0,
+    "facilities": ["wifi", "shared lounge"],
+    "booking_link": "https://example.com/chao-hostel"
+  },
+  {
+    "name": "Anantara Riverside Bangkok Resort",
+    "type": "hotel",
+    "location": "Riverside",
+    "price_per_night": 7100,
+    "rating": 4.8,
+    "facilities": ["pool", "spa", "river view", "wifi"],
+    "booking_link": "https://example.com/anantara-riverside"
+  },
+  {
+    "name": "Sleep Owl Hostel",
+    "type": "hostel",
+    "location": "Don Mueang",
+    "price_per_night": 280,
+    "rating": 3.9,
+    "facilities": ["wifi", "airport shuttle"],
+    "booking_link": "https://example.com/sleep-owl"
+  },
+  {
+    "name": "Sorn",
+    "type": "restaurant",
+    "cuisine": "Southern Thai",
+    "price_range": "High",
+    "location": "56 Soi Sukhumvit 26, Khlong Tan, Khlong Toei, Bangkok 10110",
+    "opening_hours": "Dinner service, reservations required",
+    "dietary_options": "Limited vegetarian options",
+    "description": "Thailand's first three-Michelin-starred restaurant, offering an immersive Southern Thai culinary journey."
+  },
+  {
+    "name": "Jay Fai",
+    "type": "street food",
+    "cuisine": "Thai Seafood",
+    "price_range": "High",
+    "location": "327 Mahachai Road, Samran Rat, Phra Nakhon, Bangkok 10200",
+    "opening_hours": "Varies; reservations recommended",
+    "dietary_options": "Seafood-focused",
+    "description": "Michelin-starred street food legend known for wok-cooked seafood dishes."
+  },
+  {
+    "name": "May Veggie Home",
+    "type": "restaurant",
+    "cuisine": "Vegan Thai and International",
+    "price_range": "Medium",
+    "location": "8/3 Sukhumvit Soi 16, Khlong Toei, Bangkok 10110",
+    "opening_hours": "11:00 AM – 9:00 PM",
+    "dietary_options": "Fully Vegan",
+    "description": "A popular spot for delicious vegan interpretations of Thai classics and international dishes."
+  },
+  {
+    "name": "Broccoli Revolution",
+    "type": "café",
+    "cuisine": "Vegan, Fusion",
+    "price_range": "Medium",
+    "location": "899 Sukhumvit Road, Khlong Tan Nuea, Watthana, Bangkok 10110",
+    "opening_hours": "9:00 AM – 10:00 PM",
+    "dietary_options": "Fully Vegan",
+    "description": "Stylish café offering a diverse vegan menu with global influences."
+  },
+  {
+    "name": "Gaggan Anand",
+    "type": "restaurant",
+    "cuisine": "Progressive Indian",
+    "price_range": "High",
+    "location": "68 Sukhumvit 31, Khlong Tan Nuea, Watthana, Bangkok 10110",
+    "opening_hours": "Dinner service, reservations required",
+    "dietary_options": "Vegetarian and Non-Vegetarian Tasting Menus",
+    "description": "Renowned for its avant-garde approach to Indian cuisine, offering a unique dining experience."
+  }
+]
