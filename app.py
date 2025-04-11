@@ -131,10 +131,10 @@ else:
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
 
-        with st.expander("📜 View Chat History", expanded=False):
+        with st.expander("📂 View Prev. Convo", expanded=False):
             for i, chat in enumerate(reversed(st.session_state.chat_history[-20:]), 1):
-                st.markdown(f"**Q{i}:** {chat['user']}")
-                st.markdown(f"<span style='color: gray;'>A{i}: {chat['assistant']}</span>", unsafe_allow_html=True)
+                st.markdown(f"**{i}:** {chat['user']}")
+                st.markdown(f"<span style='color: gray;'>{i}: {chat['assistant']}</span>", unsafe_allow_html=True)
                 st.markdown("---")
 
         user_input = st.chat_input("Type here, bro...")
