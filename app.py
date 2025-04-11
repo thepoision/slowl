@@ -93,7 +93,7 @@ if not st.session_state.authenticated:
 
 # --- Main App After Login ---
 else:
-    st.markdown("<h1 style='text-align: center;'>🏝️ Plan Your Trip With Your AI Bro</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>🏕️ Plan Your Trip With Your AI Bro</h1>", unsafe_allow_html=True)
     st.markdown(f"<h3 style='text-align: center;'>{greet_user()}</h3>", unsafe_allow_html=True)
     st.markdown("---")
 
@@ -128,6 +128,9 @@ else:
     if "user_context" in st.session_state:
         st.markdown("### 💬 Ask me anything about Bangkok:")
 
+        if "chat_history" not in st.session_state:
+            st.session_state.chat_history = []
+
         with st.expander("📜 View Chat History", expanded=False):
             for i, chat in enumerate(reversed(st.session_state.chat_history[-20:]), 1):
                 st.markdown(f"**Q{i}:** {chat['user']}")
@@ -135,9 +138,6 @@ else:
                 st.markdown("---")
 
         user_input = st.chat_input("Type here, bro...")
-
-        if "chat_history" not in st.session_state:
-            st.session_state.chat_history = []
 
         if user_input:
             context = st.session_state.user_context
@@ -218,4 +218,4 @@ Respond in {context['language']}. Be smart, friendly, casual. Keep the flow. Dec
             })
 
             save_convo(st.session_state.email, st.session_state.chat_history)
-            st.toast("💾 Saved that convo, bro!")
+            st.toast("📂 Saved that convo, bro!")
