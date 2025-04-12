@@ -79,41 +79,35 @@ if "location" not in st.session_state:
 
 # --- Login/Register Page ---
 if not st.session_state.authenticated:
-    with st.container():
-        st.markdown("""
-            <h1 style='text-align: center; font-size: 3em;'>🧲 Bangkok Travel Bro</h1>
-            <p style='text-align: center; font-size: 1.2em;'>🚀 Sign in to start planning your Bangkok adventure!</p>
-        """, unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>🧲 Bangkok Travel Bro</h1>", unsafe_allow_html=True)
+    st.markdown("#### 🚀 Sign in to start planning your Bangkok adventure!")
 
-        with st.form("auth_form"):
-            st.text_input("📧 Email", placeholder="Enter your email", key="email")
-            st.text_input("🔑 Password", placeholder="Enter password", type="password", key="password")
-            col1, col2 = st.columns(2)
-            with col1:
-                login_btn = st.form_submit_button("🚪 Login")
-            with col2:
-                register_btn = st.form_submit_button("📝 Register")
+    with st.container():
+        email = st.text_input("📧 Email", placeholder="Enter your email")
+        password = st.text_input("🔑 Password", placeholder="Enter password", type="password")
+        col1, col2 = st.columns(2)
+        with col1:
+            login_btn = st.button("🚪 Login")
+        with col2:
+            register_btn = st.button("📝 Register")
 
     if login_btn:
-        if authenticate(st.session_state.email, st.session_state.password):
+        if authenticate(email, password):
             st.session_state.authenticated = True
-            st.session_state.email = st.session_state.email
+            st.session_state.email = email
             st.success("You're in, bro! 🎉")
         else:
             st.error("Wrong email or password 💀")
 
     if register_btn:
-        save_user(st.session_state.email, st.session_state.password)
+        save_user(email, password)
         st.success("Boom. You're registered. Now log in! 🔓")
 
 # --- Main App After Login ---
 else:
-    with st.container():
-        st.markdown(f"""
-            <h1 style='text-align: center; font-size: 2.5em;'>🏕️ Plan Your Trip With Your AI Bro</h1>
-            <h3 style='text-align: center;'>{greet_user()}</h3>
-            <hr>
-        """, unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>🏕️ Plan Your Trip With Your AI Bro</h1>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='text-align: center;'>{greet_user()}</h3>", unsafe_allow_html=True)
+    st.markdown("---")
 
     if st.session_state.location is None:
         if st.button("📍 Detect My Current Location"):
@@ -125,7 +119,8 @@ else:
         with st.form("user_info"):
             col1, col2 = st.columns(2)
             with col1:
-                language = st.selectbox("🌐 Preferred Language", ["English 🇬🇧", "Malay 🇲🇾", "Hindi 🇮🇳", "Chinese 🇨🇳"])
+                language = st.selectbox("🌐 Preferred Language", 
+                                        ["English 🇬🇧", "Malay 🇲🇾", "Hindi 🇮🇳", "Chinese 🇨🇳"])
             with col2:
                 budget = st.number_input("💰 Your Budget (THB)", min_value=1000)
 
