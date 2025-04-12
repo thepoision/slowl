@@ -1,42 +1,11 @@
 import streamlit as st
+st.set_page_config(page_title="Bangkok Travel Bro", page_icon="🧲", layout="centered")
+
 import google.generativeai as genai
 import os
 import json
 import datetime
 import re
-
-# --- Page Config ---
-st.set_page_config(page_title="Bangkok Travel Bro", page_icon="🧲", layout="centered")
-st.markdown("""
-    <style>
-        html, body, [class*="css"]  {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #f7f8fa;
-        }
-        h1, h3 {
-            color: #1f2937;
-        }
-        .stButton > button {
-            background-color: #3b82f6;
-            color: white;
-            border-radius: 10px;
-            padding: 0.5em 1em;
-            font-weight: bold;
-        }
-        .stButton > button:hover {
-            background-color: #2563eb;
-        }
-        .stMarkdown, .stTextInput, .stSelectbox, .stNumberInput, .stDateInput {
-            padding: 0.3em;
-        }
-        .stChatMessage {
-            border-radius: 12px;
-            background-color: #ffffff;
-            padding: 1em;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.03);
-        }
-    </style>
-""", unsafe_allow_html=True)
 
 # --- Gemini Flash 2.0 API Key ---
 genai.configure(api_key="AIzaSyD3eVlWuVn1dYep2XOW3OaI6_g6oBy38Uk")
@@ -112,8 +81,8 @@ if "location" not in st.session_state:
 if not st.session_state.authenticated:
     with st.container():
         st.markdown("""
-            <h1 style='text-align: center;'>🧲 Bangkok Travel Bro</h1>
-            <p style='text-align: center;'>🚀 Sign in to start planning your Bangkok adventure!</p>
+            <h1 style='text-align: center; font-size: 3em;'>🧲 Bangkok Travel Bro</h1>
+            <p style='text-align: center; font-size: 1.2em;'>🚀 Sign in to start planning your Bangkok adventure!</p>
         """, unsafe_allow_html=True)
 
         with st.form("auth_form"):
@@ -141,11 +110,140 @@ if not st.session_state.authenticated:
 else:
     with st.container():
         st.markdown(f"""
-            <h1 style='text-align: center;'>🏕️ Plan Your Trip With Your AI Bro</h1>
+            <h1 style='text-align: center; font-size: 2.5em;'>🏕️ Plan Your Trip With Your AI Bro</h1>
             <h3 style='text-align: center;'>{greet_user()}</h3>
             <hr>
         """, unsafe_allow_html=True)
 
     if st.session_state.location is None:
         if st.button("📍 Detect My Current Location"):
-            st.session_state.location = {"latitude": 13.7563, "longitude
+            st.session_state.location = {"latitude": 13.7563, "longitude": 100.5018}
+            st.success(f"Location detected: {st.session_state.location['latitude']}, {st.session_state.location['longitude']}")
+
+    if "user_context" not in st.session_state:
+        st.markdown("#### 🌍 Tell me a bit about your trip:")
+        with st.form("user_info"):
+            col1, col2 = st.columns(2)
+            with col1:
+                language = st.selectbox("🌐 Preferred Language", ["English 🇬🇧", "Malay 🇲🇾", "Hindi 🇮🇳", "Chinese 🇨🇳"])
+            with col2:
+                budget = st.number_input("💰 Your Budget (THB)", min_value=1000)
+
+            col3, col4 = st.columns(2)
+            with col3:
+                start_date = st.date_input("🗓 Start Date")
+            with col4:
+                end_date = st.date_input("🗓 End Date")
+
+            submitted = st.form_submit_button("✅ Save Trip Info")
+
+            if submitted:
+                st.session_state.user_context = {
+                    "language": language.split()[0],
+                    "budget": budget,
+                    "start_date": str(start_date),
+                    "end_date": str(end_date),
+                }
+                st.success("All set! Let’s chat 🤙")
+                st.balloons()
+
+    if "user_context" in st.session_state:
+        st.markdown("### 💬 Ask me anything about Bangkok:")
+
+        if "chat_history" not in st.session_state:
+            st.session_state.chat_history = []
+
+        with st.expander("📂 View Prev. Convo", expanded=False):
+            for i, chat in enumerate(reversed(st.session_state.chat_history[-20:]), 1):
+                st.markdown(f"**{i}:** {chat['user']}")
+                st.markdown(f"<span style='color: gray;'>{i}: {chat['assistant']}</span>", unsafe_allow_html=True)
+                st.markdown("---")
+
+        user_input = st.chat_input("Type here, bro...")
+
+        if user_input:
+            context = st.session_state.user_context
+
+            def format_data_snippet(data, limit_per_category=5):
+                all_items = []
+                for category, items in data.items():
+                    for item in items[:limit_per_category]:
+                        all_items.append(
+                            f"- {item.get('name', 'Unnamed')} ({item.get('type', 'Unknown').title()}), "
+                            f"{item.get('location', 'Unknown')}, Price: {item.get('price', item.get('price_per_night', 'N/A'))}, "
+                            f"Rating: {item.get('rating', 'N/A')}, Tags: {', '.join(item.get('tags', []))}"
+                        )
+                return "\n".join(all_items)
+
+            data_snippet = format_data_snippet(local_data)
+
+            past_chat = ""
+            for chat in st.session_state.chat_history[-6:]:
+                past_chat += f"User: {chat['user']}\nAI Bro: {chat['assistant']}\n"
+
+            location_info = ""
+            if st.session_state.location:
+                location_info = f"User current location: Latitude {st.session_state.location['latitude']}, " \
+                                f"Longitude {st.session_state.location['longitude']}\n"
+            else:
+                location_info = "User current location: Not detected yet.\n"
+
+            prompt = f"""
+You're a helpful and chill AI travel bro for someone visiting Bangkok.
+If it's appropriate, show a brief intro paragraph followed by a list of recommendations.
+Use this format when showing structured results:
+{{"cards": [{{"name": "Name", "price": 250, "rating": 4.3, "location": "Area", "type": "hostel", "button": "Book Now"}}]}}
+
+ONLY use this data when recommending places:
+{data_snippet}
+
+User preferences:
+- Language: {context['language']}
+- Budget: {context['budget']} THB
+- Travel Dates: {context['start_date']} to {context['end_date']}
+
+{location_info}
+Chat so far:
+{past_chat}
+
+User: {user_input}
+
+Respond in {context['language']}. Be smart, friendly, casual. Keep the flow.
+"""
+            with st.spinner("Your bro is thinking... 💭"):
+                response = model.generate_content(prompt)
+                reply = response.text
+
+            st.chat_message("user").markdown(user_input)
+
+            try:
+                card_json_match = re.search(r'\{.*"cards"\s*:\s*\[.*\]\s*\}', reply, re.DOTALL)
+                if card_json_match:
+                    parsed = json.loads(card_json_match.group())
+                    intro_text = reply.split(card_json_match.group())[0].strip()
+                    if intro_text:
+                        st.chat_message("assistant").markdown(intro_text)
+                    st.markdown("**Here are some awesome picks for you:**")
+                    for card in parsed["cards"]:
+                        with st.container(border=True):
+                            st.markdown(f"### {card['name']}")
+                            col1, col2 = st.columns(2)
+                            with col1:
+                                st.markdown(f"**Location:** {card['location']}")
+                                st.markdown(f"**Type:** {card['type'].title()}")
+                            with col2:
+                                st.markdown(f"**Price:** {card['price']} THB")
+                                st.markdown(f"**Rating:** {card['rating']} ⭐")
+                            st.button(card.get("button", "Select"), key=card['name'])
+                else:
+                    st.chat_message("assistant").markdown(reply)
+            except Exception as e:
+                st.chat_message("assistant").markdown(reply)
+
+            st.session_state.chat_history.append({
+                "user": user_input,
+                "assistant": reply
+            })
+
+            save_convo(st.session_state.email, st.session_state.chat_history)
+            st.toast("📂 Saved that convo, bro!")
