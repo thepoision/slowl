@@ -1,5 +1,5 @@
 import streamlit as st
-st.set_page_config(page_title="Bangkok Travel Bro", page_icon="🧢", layout="centered")
+st.set_page_config(page_title="Bangkok Travel Bro", page_icon="🧲", layout="centered")
 
 import google.generativeai as genai
 import os
@@ -7,8 +7,8 @@ import json
 import datetime
 import re
 
-# --- Gemini Flash 2.0 API Key ---
-genai.configure(api_key="AIzaSyD3eVlWuVn1dYep2XOW3OaI6_g6oBy38Uk")
+# --- Gemini Flash 2.0 API Key (Consider moving this to your secrets) ---
+genai.configure(api_key=os.getenv("GEMINI_API_KEY", "YOUR_API_KEY_HERE"))
 model = genai.GenerativeModel("gemini-2.0-flash")
 
 # --- Load Bangkok Data ---
@@ -18,6 +18,14 @@ def load_data():
         return json.load(f)
 
 local_data = load_data()
+
+# --- Load Bangkok Map Data ---
+@st.cache_data
+def load_map_data():
+    with open("bangkok_map.json", "r") as f:
+        return json.load(f)
+
+map_data = load_map_data()
 
 # --- User DB ---
 USER_DB_PATH = "users.json"
@@ -65,9 +73,13 @@ def greet_user():
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
+# --- Store Location in Session State ---
+if "location" not in st.session_state:
+    st.session_state.location = None
+
 # --- Login/Register Page ---
 if not st.session_state.authenticated:
-    st.markdown("<h1 style='text-align: center;'>🧢 Bangkok Travel Bro</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>🧲 Bangkok Travel Bro</h1>", unsafe_allow_html=True)
     st.markdown("#### 🚀 Sign in to start planning your Bangkok adventure!")
 
     with st.container():
@@ -97,6 +109,11 @@ else:
     st.markdown(f"<h3 style='text-align: center;'>{greet_user()}</h3>", unsafe_allow_html=True)
     st.markdown("---")
 
+    if st.session_state.location is None:
+        if st.button("📍 Detect My Current Location"):
+            st.session_state.location = {"latitude": 13.7563, "longitude": 100.5018}
+            st.success(f"Location detected: {st.session_state.location['latitude']}, {st.session_state.location['longitude']}")
+
     if "user_context" not in st.session_state:
         st.markdown("#### 🌍 Tell me a bit about your trip:")
         with st.form("user_info"):
@@ -109,9 +126,9 @@ else:
 
             col3, col4 = st.columns(2)
             with col3:
-                start_date = st.date_input("📅 Start Date")
+                start_date = st.date_input("🗓 Start Date")
             with col4:
-                end_date = st.date_input("📅 End Date")
+                end_date = st.date_input("🗓 End Date")
 
             submitted = st.form_submit_button("✅ Save Trip Info")
 
@@ -142,10 +159,10 @@ else:
         if user_input:
             context = st.session_state.user_context
 
-            def format_data_snippet(data):
+            def format_data_snippet(data, limit_per_category=5):
                 all_items = []
                 for category, items in data.items():
-                    for item in items:
+                    for item in items[:limit_per_category]:
                         all_items.append(
                             f"- {item.get('name', 'Unnamed')} ({item.get('type', 'Unknown').title()}), "
                             f"{item.get('location', 'Unknown')}, Price: {item.get('price', item.get('price_per_night', 'N/A'))}, "
@@ -159,12 +176,18 @@ else:
             for chat in st.session_state.chat_history[-6:]:
                 past_chat += f"User: {chat['user']}\nAI Bro: {chat['assistant']}\n"
 
+            location_info = ""
+            if st.session_state.location:
+                location_info = f"User current location: Latitude {st.session_state.location['latitude']}, " \
+                                f"Longitude {st.session_state.location['longitude']}\n"
+            else:
+                location_info = "User current location: Not detected yet.\n"
+
             prompt = f"""
 You're a helpful and chill AI travel bro for someone visiting Bangkok.
 If it's appropriate, show a brief intro paragraph followed by a list of recommendations.
 Use this format when showing structured results:
 {{"cards": [{{"name": "Name", "price": 250, "rating": 4.3, "location": "Area", "type": "hostel", "button": "Book Now"}}]}}
-Otherwise, respond casually with plain text.
 
 ONLY use this data when recommending places:
 {data_snippet}
@@ -174,14 +197,14 @@ User preferences:
 - Budget: {context['budget']} THB
 - Travel Dates: {context['start_date']} to {context['end_date']}
 
+{location_info}
 Chat so far:
 {past_chat}
 
 User: {user_input}
 
-Respond in {context['language']}. Be smart, friendly, casual. Keep the flow. Decide when to show structured responses.
+Respond in {context['language']}. Be smart, friendly, casual. Keep the flow.
 """
-
             with st.spinner("Your bro is thinking... 💭"):
                 response = model.generate_content(prompt)
                 reply = response.text
