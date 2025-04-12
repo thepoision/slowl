@@ -148,5 +148,4 @@ else:
 
     if st.session_state.location is None:
         if st.button("📍 Detect My Current Location"):
-            st.session_state.location = {"latitude": 13.7563, "longitude": 100.5018}
-            st.success(f"Location detected: {st.session_state.location['latitude']}, {st.session_state.location['longitude']}")
+            st.session_state.location = {"latitude": 13.7563, "longitude
