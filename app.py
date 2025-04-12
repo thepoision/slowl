@@ -7,49 +7,6 @@ import json
 import datetime
 import re
 
-# --- Inject Custom CSS for Modern UI ---
-st.markdown("""
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
-
-    html, body, [class*="css"]  {
-        font-family: 'Inter', sans-serif;
-        background-color: #f5f7fa;
-        color: #1f2937;
-    }
-
-    h1, h2, h3 {
-        color: #111827;
-    }
-
-    .stButton button {
-        background: linear-gradient(to right, #00b4d8, #0077b6);
-        color: white;
-        padding: 0.6rem 1.2rem;
-        border-radius: 8px;
-        font-weight: 600;
-        transition: all 0.2s ease;
-    }
-    .stButton button:hover {
-        transform: scale(1.05);
-    }
-
-    div[data-testid="stChatInput"] textarea {
-        border: 2px solid #0077b6;
-        border-radius: 10px;
-        padding: 10px;
-    }
-
-    .stContainer {
-        border-radius: 12px;
-        padding: 20px;
-        background: white;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.05);
-        margin-bottom: 1rem;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
 # --- Gemini Flash 2.0 API Key ---
 genai.configure(api_key="AIzaSyD3eVlWuVn1dYep2XOW3OaI6_g6oBy38Uk")
 model = genai.GenerativeModel("gemini-2.0-flash")
@@ -120,8 +77,168 @@ if "authenticated" not in st.session_state:
 if "location" not in st.session_state:
     st.session_state.location = None
 
-# === The rest of your logic remains unchanged ===
-# (Login/Register, Trip Info, Chat UI, Gemini integration, etc.)
+# --- Login/Register Page ---
+if not st.session_state.authenticated:
+    st.markdown("<h1 style='text-align: center;'>🧲 Bangkok Travel Bro</h1>", unsafe_allow_html=True)
+    st.markdown("#### 🚀 Sign in to start planning your Bangkok adventure!")
 
-# ✨ From here onward, everything continues as before.
-# (Let me know if you want a modern layout for specific parts like trip form or chat cards!)
+    with st.container():
+        email = st.text_input("📧 Email", placeholder="Enter your email")
+        password = st.text_input("🔑 Password", placeholder="Enter password", type="password")
+        col1, col2 = st.columns(2)
+        with col1:
+            login_btn = st.button("🚪 Login")
+        with col2:
+            register_btn = st.button("📝 Register")
+
+    if login_btn:
+        if authenticate(email, password):
+            st.session_state.authenticated = True
+            st.session_state.email = email
+            st.success("You're in, bro! 🎉")
+        else:
+            st.error("Wrong email or password 💀")
+
+    if register_btn:
+        save_user(email, password)
+        st.success("Boom. You're registered. Now log in! 🔓")
+
+# --- Main App After Login ---
+else:
+    st.markdown("<h1 style='text-align: center;'>🏕️ Plan Your Trip With Your AI Bro</h1>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='text-align: center;'>{greet_user()}</h3>", unsafe_allow_html=True)
+    st.markdown("---")
+
+    if st.session_state.location is None:
+        if st.button("📍 Detect My Current Location"):
+            st.session_state.location = {"latitude": 13.7563, "longitude": 100.5018}
+            st.success(f"Location detected: {st.session_state.location['latitude']}, {st.session_state.location['longitude']}")
+
+    if "user_context" not in st.session_state:
+        st.markdown("#### 🌍 Tell me a bit about your trip:")
+        with st.form("user_info"):
+            col1, col2 = st.columns(2)
+            with col1:
+                language = st.selectbox("🌐 Preferred Language", 
+                                        ["English 🇬🇧", "Malay 🇲🇾", "Hindi 🇮🇳", "Chinese 🇨🇳"])
+            with col2:
+                budget = st.number_input("💰 Your Budget (THB)", min_value=1000)
+
+            col3, col4 = st.columns(2)
+            with col3:
+                start_date = st.date_input("🗓 Start Date")
+            with col4:
+                end_date = st.date_input("🗓 End Date")
+
+            submitted = st.form_submit_button("✅ Save Trip Info")
+
+            if submitted:
+                st.session_state.user_context = {
+                    "language": language.split()[0],
+                    "budget": budget,
+                    "start_date": str(start_date),
+                    "end_date": str(end_date),
+                }
+                st.success("All set! Let’s chat 🤙")
+                st.balloons()
+
+    if "user_context" in st.session_state:
+        st.markdown("### 💬 Ask me anything about Bangkok:")
+
+        if "chat_history" not in st.session_state:
+            st.session_state.chat_history = []
+
+        with st.expander("📂 View Prev. Convo", expanded=False):
+            for i, chat in enumerate(reversed(st.session_state.chat_history[-20:]), 1):
+                st.markdown(f"**{i}:** {chat['user']}")
+                st.markdown(f"<span style='color: gray;'>{i}: {chat['assistant']}</span>", unsafe_allow_html=True)
+                st.markdown("---")
+
+        user_input = st.chat_input("Type here, bro...")
+
+        if user_input:
+            context = st.session_state.user_context
+
+            def format_data_snippet(data, limit_per_category=5):
+                all_items = []
+                for category, items in data.items():
+                    for item in items[:limit_per_category]:
+                        all_items.append(
+                            f"- {item.get('name', 'Unnamed')} ({item.get('type', 'Unknown').title()}), "
+                            f"{item.get('location', 'Unknown')}, Price: {item.get('price', item.get('price_per_night', 'N/A'))}, "
+                            f"Rating: {item.get('rating', 'N/A')}, Tags: {', '.join(item.get('tags', []))}"
+                        )
+                return "\n".join(all_items)
+
+            data_snippet = format_data_snippet(local_data)
+
+            past_chat = ""
+            for chat in st.session_state.chat_history[-6:]:
+                past_chat += f"User: {chat['user']}\nAI Bro: {chat['assistant']}\n"
+
+            location_info = ""
+            if st.session_state.location:
+                location_info = f"User current location: Latitude {st.session_state.location['latitude']}, " \
+                                f"Longitude {st.session_state.location['longitude']}\n"
+            else:
+                location_info = "User current location: Not detected yet.\n"
+
+            prompt = f"""
+You're a helpful and chill AI travel bro for someone visiting Bangkok.
+If it's appropriate, show a brief intro paragraph followed by a list of recommendations.
+Use this format when showing structured results:
+{{"cards": [{{"name": "Name", "price": 250, "rating": 4.3, "location": "Area", "type": "hostel", "button": "Book Now"}}]}}
+
+ONLY use this data when recommending places:
+{data_snippet}
+
+User preferences:
+- Language: {context['language']}
+- Budget: {context['budget']} THB
+- Travel Dates: {context['start_date']} to {context['end_date']}
+
+{location_info}
+Chat so far:
+{past_chat}
+
+User: {user_input}
+
+Respond in {context['language']}. Be smart, friendly, casual. Keep the flow.
+"""
+            with st.spinner("Your bro is thinking... 💭"):
+                response = model.generate_content(prompt)
+                reply = response.text
+
+            st.chat_message("user").markdown(user_input)
+
+            try:
+                card_json_match = re.search(r'\{.*"cards"\s*:\s*\[.*\]\s*\}', reply, re.DOTALL)
+                if card_json_match:
+                    parsed = json.loads(card_json_match.group())
+                    intro_text = reply.split(card_json_match.group())[0].strip()
+                    if intro_text:
+                        st.chat_message("assistant").markdown(intro_text)
+                    st.markdown("**Here are some awesome picks for you:**")
+                    for card in parsed["cards"]:
+                        with st.container(border=True):
+                            st.markdown(f"### {card['name']}")
+                            col1, col2 = st.columns(2)
+                            with col1:
+                                st.markdown(f"**Location:** {card['location']}")
+                                st.markdown(f"**Type:** {card['type'].title()}")
+                            with col2:
+                                st.markdown(f"**Price:** {card['price']} THB")
+                                st.markdown(f"**Rating:** {card['rating']} ⭐")
+                            st.button(card.get("button", "Select"), key=card['name'])
+                else:
+                    st.chat_message("assistant").markdown(reply)
+            except Exception as e:
+                st.chat_message("assistant").markdown(reply)
+
+            st.session_state.chat_history.append({
+                "user": user_input,
+                "assistant": reply
+            })
+
+            save_convo(st.session_state.email, st.session_state.chat_history)
+            st.toast("📂 Saved that convo, bro!")
