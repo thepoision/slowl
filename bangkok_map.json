@@ -1,0 +1,510 @@
+{
+  "locations": {
+    "Grand Palace": {
+      "coordinates": {"lat": 13.7500, "lng": 100.4919},
+      "district": "Old City",
+      "nearest_stations": [
+        {"name": "Tha Chang Pier", "type": "boat", "distance": 0.3},
+        {"name": "Sanam Chai MRT", "type": "mrt", "distance": 1.2}
+      ],
+      "transit_options": ["Boat", "Taxi", "Tuk-tuk", "Grab"],
+      "description": "Former royal residence with ornate buildings and temples including Wat Phra Kaew",
+      "entrance_fee": 500
+    },
+    "Wat Arun": {
+      "coordinates": {"lat": 13.7443, "lng": 100.4885},
+      "district": "Thonburi",
+      "nearest_stations": [
+        {"name": "Wat Arun Pier", "type": "boat", "distance": 0.1}
+      ],
+      "transit_options": ["Boat", "Taxi", "Grab"],
+      "description": "Stunning riverside temple with ornate spires covered in colorful porcelain",
+      "entrance_fee": 50
+    },
+    "Wat Pho": {
+      "coordinates": {"lat": 13.7465, "lng": 100.4929},
+      "district": "Old City",
+      "nearest_stations": [
+        {"name": "Tha Tien Pier", "type": "boat", "distance": 0.2},
+        {"name": "Sanam Chai MRT", "type": "mrt", "distance": 0.9}
+      ],
+      "transit_options": ["Boat", "Taxi", "Tuk-tuk", "Grab"],
+      "description": "Temple of the Reclining Buddha with traditional Thai massage school",
+      "entrance_fee": 200
+    },
+    "Chatuchak Weekend Market": {
+      "coordinates": {"lat": 13.7999, "lng": 100.5502},
+      "district": "Chatuchak",
+      "nearest_stations": [
+        {"name": "Mo Chit BTS", "type": "bts", "distance": 0.3},
+        {"name": "Chatuchak Park MRT", "type": "mrt", "distance": 0.2}
+      ],
+      "transit_options": ["BTS", "MRT", "Taxi", "Grab"],
+      "description": "Massive weekend market with over 8,000 stalls selling everything imaginable",
+      "entrance_fee": 0
+    },
+    "Siam Paragon": {
+      "coordinates": {"lat": 13.7462, "lng": 100.5347},
+      "district": "Siam",
+      "nearest_stations": [
+        {"name": "Siam BTS", "type": "bts", "distance": 0.1}
+      ],
+      "transit_options": ["BTS", "Taxi", "Grab"],
+      "description": "Luxury shopping mall with high-end brands, SEA LIFE aquarium, and food court",
+      "entrance_fee": 0
+    },
+    "MBK Center": {
+      "coordinates": {"lat": 13.7446, "lng": 100.5296},
+      "district": "Siam",
+      "nearest_stations": [
+        {"name": "National Stadium BTS", "type": "bts", "distance": 0.2},
+        {"name": "Siam BTS", "type": "bts", "distance": 0.4}
+      ],
+      "transit_options": ["BTS", "Taxi", "Grab"],
+      "description": "Popular mall for electronics, clothing, and souvenirs at bargain prices",
+      "entrance_fee": 0
+    },
+    "Terminal 21": {
+      "coordinates": {"lat": 13.7384, "lng": 100.5602},
+      "district": "Sukhumvit",
+      "nearest_stations": [
+        {"name": "Asok BTS", "type": "bts", "distance": 0.1},
+        {"name": "Sukhumvit MRT", "type": "mrt", "distance": 0.1}
+      ],
+      "transit_options": ["BTS", "MRT", "Taxi", "Grab"],
+      "description": "Airport-themed mall with floors representing different world cities",
+      "entrance_fee": 0
+    },
+    "Khao San Road": {
+      "coordinates": {"lat": 13.7581, "lng": 100.4973},
+      "district": "Old City",
+      "nearest_stations": [
+        {"name": "Phra Arthit Pier", "type": "boat", "distance": 0.6}
+      ],
+      "transit_options": ["Boat", "Taxi", "Tuk-tuk", "Grab"],
+      "description": "Famous backpacker street with budget accommodations, bars, and street food",
+      "entrance_fee": 0
+    },
+    "Jim Thompson House": {
+      "coordinates": {"lat": 13.7509, "lng": 100.5316},
+      "district": "Siam",
+      "nearest_stations": [
+        {"name": "National Stadium BTS", "type": "bts", "distance": 0.4}
+      ],
+      "transit_options": ["BTS", "Taxi", "Grab"],
+      "description": "Traditional Thai house museum of American silk entrepreneur with art collection",
+      "entrance_fee": 200
+    },
+    "Chinatown (Yaowarat)": {
+      "coordinates": {"lat": 13.7394, "lng": 100.5081},
+      "district": "Chinatown",
+      "nearest_stations": [
+        {"name": "Hua Lamphong MRT", "type": "mrt", "distance": 0.7},
+        {"name": "Wat Mangkon MRT", "type": "mrt", "distance": 0.3}
+      ],
+      "transit_options": ["MRT", "Taxi", "Tuk-tuk", "Grab"],
+      "description": "Bustling district with gold shops, Chinese temples, and fantastic street food",
+      "entrance_fee": 0
+    },
+    "Asiatique The Riverfront": {
+      "coordinates": {"lat": 13.7049, "lng": 100.4902},
+      "district": "Riverside",
+      "nearest_stations": [
+        {"name": "Asiatique Pier", "type": "boat", "distance": 0.1}
+      ],
+      "transit_options": ["Boat", "Taxi", "Grab"],
+      "description": "Riverside night market with shops, restaurants, and entertainment",
+      "entrance_fee": 0
+    },
+    "Bangkok Art and Culture Centre": {
+      "coordinates": {"lat": 13.7462, "lng": 100.5296},
+      "district": "Siam",
+      "nearest_stations": [
+        {"name": "National Stadium BTS", "type": "bts", "distance": 0.1}
+      ],
+      "transit_options": ["BTS", "Taxi", "Grab"],
+      "description": "Contemporary art museum with rotating exhibitions and cultural events",
+      "entrance_fee": 0
+    },
+    "Lumpini Park": {
+      "coordinates": {"lat": 13.7309, "lng": 100.5412},
+      "district": "Silom",
+      "nearest_stations": [
+        {"name": "Silom MRT", "type": "mrt", "distance": 0.3},
+        {"name": "Lumphini MRT", "type": "mrt", "distance": 0.2}
+      ],
+      "transit_options": ["MRT", "Taxi", "Grab"],
+      "description": "Central urban park with lake, walking paths, and monitor lizards",
+      "entrance_fee": 0
+    },
+    "Siam Square": {
+      "coordinates": {"lat": 13.7456, "lng": 100.5331},
+      "district": "Siam",
+      "nearest_stations": [
+        {"name": "Siam BTS", "type": "bts", "distance": 0.1}
+      ],
+      "transit_options": ["BTS", "Taxi", "Grab"],
+      "description": "Trendy shopping area popular with Thai youth and fashion enthusiasts",
+      "entrance_fee": 0
+    },
+    "Erawan Shrine": {
+      "coordinates": {"lat": 13.7443, "lng": 100.5403},
+      "district": "Ratchaprasong",
+      "nearest_stations": [
+        {"name": "Chit Lom BTS", "type": "bts", "distance": 0.2}
+      ],
+      "transit_options": ["BTS", "Taxi", "Grab"],
+      "description": "Popular Hindu shrine with traditional Thai dancers performing for visitors",
+      "entrance_fee": 0
+    },
+    "Soi Cowboy": {
+      "coordinates": {"lat": 13.7384, "lng": 100.5631},
+      "district": "Sukhumvit",
+      "nearest_stations": [
+        {"name": "Asok BTS", "type": "bts", "distance": 0.3},
+        {"name": "Sukhumvit MRT", "type": "mrt", "distance": 0.3}
+      ],
+      "transit_options": ["BTS", "MRT", "Taxi", "Grab"],
+      "description": "Infamous adult entertainment district with neon-lit go-go bars",
+      "entrance_fee": 0
+    },
+    "Nana Plaza": {
+      "coordinates": {"lat": 13.7407, "lng": 100.5553},
+      "district": "Sukhumvit",
+      "nearest_stations": [
+        {"name": "Nana BTS", "type": "bts", "distance": 0.2}
+      ],
+      "transit_options": ["BTS", "Taxi", "Grab"],
+      "description": "Three-story adult entertainment complex with bars and clubs",
+      "entrance_fee": 0
+    },
+    "Patpong Night Market": {
+      "coordinates": {"lat": 13.7278, "lng": 100.5324},
+      "district": "Silom",
+      "nearest_stations": [
+        {"name": "Sala Daeng BTS", "type": "bts", "distance": 0.2},
+        {"name": "Silom MRT", "type": "mrt", "distance": 0.3}
+      ],
+      "transit_options": ["BTS", "MRT", "Taxi", "Grab"],
+      "description": "Night market with counterfeit goods surrounded by adult entertainment venues",
+      "entrance_fee": 0
+    },
+    "CentralWorld": {
+      "coordinates": {"lat": 13.7466, "lng": 100.5393},
+      "district": "Ratchaprasong",
+      "nearest_stations": [
+        {"name": "Chit Lom BTS", "type": "bts", "distance": 0.3},
+        {"name": "Siam BTS", "type": "bts", "distance": 0.5}
+      ],
+      "transit_options": ["BTS", "Taxi", "Grab"],
+      "description": "One of Southeast Asia's largest shopping complexes with hundreds of stores",
+      "entrance_fee": 0
+    },
+    "Wat Saket (Golden Mount)": {
+      "coordinates": {"lat": 13.7538, "lng": 100.5068},
+      "district": "Old City",
+      "nearest_stations": [
+        {"name": "Phan Fa Pier", "type": "boat", "distance": 0.6}
+      ],
+      "transit_options": ["Boat", "Taxi", "Tuk-tuk", "Grab"],
+      "description": "Temple on artificial hill with panoramic city views",
+      "entrance_fee": 50
+    },
+    "Dusit Zoo": {
+      "coordinates": {"lat": 13.7744, "lng": 100.5166},
+      "district": "Dusit",
+      "nearest_stations": [],
+      "transit_options": ["Taxi", "Tuk-tuk", "Grab"],
+      "description": "Thailand's oldest zoo housing various animal species (note: closed permanently in 2018)",
+      "entrance_fee": 0,
+      "status": "closed"
+    },
+    "Siriraj Medical Museum": {
+      "coordinates": {"lat": 13.7580, "lng": 100.4856},
+      "district": "Bangkok Noi",
+      "nearest_stations": [
+        {"name": "Wang Lang Pier", "type": "boat", "distance": 0.2}
+      ],
+      "transit_options": ["Boat", "Taxi", "Grab"],
+      "description": "Medical museum with preserved human remains and medical specimens",
+      "entrance_fee": 200
+    },
+    "EmQuartier": {
+      "coordinates": {"lat": 13.7305, "lng": 100.5693},
+      "district": "Sukhumvit",
+      "nearest_stations": [
+        {"name": "Phrom Phong BTS", "type": "bts", "distance": 0.1}
+      ],
+      "transit_options": ["BTS", "Taxi", "Grab"],
+      "description": "Luxury shopping mall with high-end brands and gourmet restaurants",
+      "entrance_fee": 0
+    },
+    "Rod Fai Night Market Ratchada": {
+      "coordinates": {"lat": 13.7746, "lng": 100.5730},
+      "district": "Ratchada",
+      "nearest_stations": [
+        {"name": "Thailand Cultural Centre MRT", "type": "mrt", "distance": 0.3}
+      ],
+      "transit_options": ["MRT", "Taxi", "Grab"],
+      "description": "Night market with vintage collectibles, fashion, and food stalls",
+      "entrance_fee": 0
+    },
+    "Bangkok National Museum": {
+      "coordinates": {"lat": 13.7516, "lng": 100.4916},
+      "district": "Old City",
+      "nearest_stations": [],
+      "transit_options": ["Taxi", "Tuk-tuk", "Grab", "Boat"],
+      "description": "Thailand's largest museum displaying Thai art and artifacts from prehistoric to modern times",
+      "entrance_fee": 200
+    },
+    "Wat Benchamabophit (Marble Temple)": {
+      "coordinates": {"lat": 13.7651, "lng": 100.5137},
+      "district": "Dusit",
+      "nearest_stations": [],
+      "transit_options": ["Taxi", "Tuk-tuk", "Grab"],
+      "description": "Beautiful white marble temple built during King Chulalongkorn's reign",
+      "entrance_fee": 50
+    },
+    "Siam Discovery": {
+      "coordinates": {"lat": 13.7466, "lng": 100.5314},
+      "district": "Siam",
+      "nearest_stations": [
+        {"name": "Siam BTS", "type": "bts", "distance": 0.2}
+      ],
+      "transit_options": ["BTS", "Taxi", "Grab"],
+      "description": "Lifestyle concept mall focusing on trends and experiences",
+      "entrance_fee": 0
+    },
+    "IconSiam": {
+      "coordinates": {"lat": 13.7268, "lng": 100.5103},
+      "district": "Thonburi",
+      "nearest_stations": [
+        {"name": "IconSiam Pier", "type": "boat", "distance": 0.1}
+      ],
+      "transit_options": ["Boat", "Taxi", "Grab"],
+      "description": "Luxury mall with indoor floating market and Apple's first store in Thailand",
+      "entrance_fee": 0
+    },
+    "Sea Life Bangkok Ocean World": {
+      "coordinates": {"lat": 13.7462, "lng": 100.5347},
+      "district": "Siam",
+      "nearest_stations": [
+        {"name": "Siam BTS", "type": "bts", "distance": 0.1}
+      ],
+      "transit_options": ["BTS", "Taxi", "Grab"],
+      "description": "One of Southeast Asia's largest aquariums located in Siam Paragon basement",
+      "entrance_fee": 1090
+    },
+    "Madame Tussauds Bangkok": {
+      "coordinates": {"lat": 13.7465, "lng": 100.5347},
+      "district": "Siam",
+      "nearest_stations": [
+        {"name": "Siam BTS", "type": "bts", "distance": 0.1}
+      ],
+      "transit_options": ["BTS", "Taxi", "Grab"],
+      "description": "Wax museum featuring celebrities and historical figures",
+      "entrance_fee": 1000
+    },
+    "Sukhumvit Soi 11": {
+      "coordinates": {"lat": 13.7424, "lng": 100.5547},
+      "district": "Sukhumvit",
+      "nearest_stations": [
+        {"name": "Nana BTS", "type": "bts", "distance": 0.3}
+      ],
+      "transit_options": ["BTS", "Taxi", "Grab"],
+      "description": "Popular nightlife street with bars, clubs, and restaurants",
+      "entrance_fee": 0
+    },
+    "Vimanmek Mansion": {
+      "coordinates": {"lat": 13.7741, "lng": 100.5132},
+      "district": "Dusit",
+      "nearest_stations": [],
+      "transit_options": ["Taxi", "Tuk-tuk", "Grab"],
+      "description": "World's largest golden teak building and former royal residence",
+      "entrance_fee": 100
+    },
+    "Siam Niramit": {
+      "coordinates": {"lat": 13.7979, "lng": 100.5724},
+      "district": "Ratchada",
+      "nearest_stations": [
+        {"name": "Thailand Cultural Centre MRT", "type": "mrt", "distance": 0.8}
+      ],
+      "transit_options": ["MRT", "Taxi", "Grab"],
+      "description": "Cultural show depicting Thailand's history and mythology",
+      "entrance_fee": 1500
+    }
+  },
+  "districts": {
+    "Sukhumvit": {
+      "description": "Modern commercial area with luxury hotels, shopping, and nightlife",
+      "main_stations": ["Asok BTS", "Nana BTS", "Phrom Phong BTS", "Thong Lo BTS"],
+      "connectivity": "BTS Sukhumvit Line runs through the entire area"
+    },
+    "Siam": {
+      "description": "Central shopping district with major malls and entertainment",
+      "main_stations": ["Siam BTS", "National Stadium BTS"],
+      "connectivity": "Interchange station for BTS Silom and Sukhumvit lines"
+    },
+    "Silom/Sathorn": {
+      "description": "Business district with nightlife on Silom Road",
+      "main_stations": ["Sala Daeng BTS", "Silom MRT", "Chong Nonsi BTS"],
+      "connectivity": "Served by both BTS Silom Line and MRT Blue Line"
+    },
+    "Riverside": {
+      "description": "Area along Chao Phraya with luxury hotels and historic sites",
+      "main_stations": ["Saphan Taksin BTS", "Various river piers"],
+      "connectivity": "Access via BTS to Saphan Taksin then river boats"
+    },
+    "Old City/Rattanakosin": {
+      "description": "Historic district with Grand Palace and major temples",
+      "main_stations": ["Tha Chang Pier", "Phra Athit Pier", "Sanam Chai MRT"],
+      "connectivity": "Limited rail access; use boats, buses, or taxis"
+    },
+    "Chinatown/Yaowarat": {
+      "description": "Historic Chinese district with food and markets",
+      "main_stations": ["Hua Lamphong MRT", "Wat Mangkon MRT"],
+      "connectivity": "MRT Blue Line provides access"
+    },
+    "Chatuchak": {
+      "description": "Northern area famous for weekend market",
+      "main_stations": ["Mo Chit BTS", "Chatuchak Park MRT"],
+      "connectivity": "BTS Sukhumvit Line and MRT Blue Line terminus"
+    },
+    "Ratchada": {
+      "description": "Emerging entertainment district with night markets",
+      "main_stations": ["Thailand Cultural Centre MRT", "Huai Khwang MRT"],
+      "connectivity": "MRT Blue Line runs through the area"
+    },
+    "Thonburi": {
+      "description": "Western side of the river with quieter atmosphere",
+      "main_stations": ["Wongwian Yai BTS", "Various river piers"],
+      "connectivity": "BTS Silom Line extension and river crossings"
+    },
+    "Dusit": {
+      "description": "Royal district with palaces and government buildings",
+      "main_stations": [],
+      "connectivity": "Limited public transit; mainly accessed by taxi"
+    },
+    "Ratchaprasong": {
+      "description": "Upscale shopping district with luxury malls",
+      "main_stations": ["Chit Lom BTS", "Siam BTS"],
+      "connectivity": "BTS Sukhumvit Line provides good access"
+    },
+    "Bangkok Noi": {
+      "description": "Quieter area west of the river with canals and local life",
+      "main_stations": ["Wang Lang Pier"],
+      "connectivity": "Accessed via boat services"
+    }
+  },
+  "transit_systems": {
+    "BTS_Skytrain": {
+      "lines": {
+        "Sukhumvit_Line": {
+          "color": "Light Green",
+          "stations": {
+            "Khu Khot": {"lat": 13.9716, "lng": 100.5968},
+            "Yaek Kor Por Aor": {"lat": 13.9565, "lng": 100.5915},
+            "Phahon Yothin 59": {"lat": 13.9431, "lng": 100.5880},
+            "Sai Yud": {"lat": 13.9307, "lng": 100.5857},
+            "Saphan Mai": {"lat": 13.8889, "lng": 100.5868},
+            "Bhumibol Adulyadej Hospital": {"lat": 13.8759, "lng": 100.5822},
+            "Royal Thai Air Force Museum": {"lat": 13.8693, "lng": 100.5789},
+            "Bang Bua": {"lat": 13.8561, "lng": 100.5793},
+            "Royal Forest Department": {"lat": 13.8459, "lng": 100.5734},
+            "Kasetsart University": {"lat": 13.8421, "lng": 100.5711},
+            "Sena Nikhom": {"lat": 13.8363, "lng": 100.5670},
+            "Ratchayothin": {"lat": 13.8303, "lng": 100.5694},
+            "Phahon Yothin 24": {"lat": 13.8250, "lng": 100.5698},
+            "Ha Yaek Lat Phrao": {"lat": 13.8160, "lng": 100.5611},
+            "Mo Chit": {"lat": 13.8023, "lng": 100.5535},
+            "Saphan Khwai": {"lat": 13.7933, "lng": 100.5487},
+            "Ari": {"lat": 13.7793, "lng": 100.5472},
+            "Sanam Pao": {"lat": 13.7722, "lng": 100.5428},
+            "Victory Monument": {"lat": 13.7638, "lng": 100.5371},
+            "Phaya Thai": {"lat": 13.7567, "lng": 100.5347},
+            "Ratchathewi": {"lat": 13.7520, "lng": 100.5313},
+            "Siam": {"lat": 13.7455, "lng": 100.5331},
+            "Chit Lom": {"lat": 13.7442, "lng": 100.5432},
+            "Phloen Chit": {"lat": 13.7437, "lng": 100.5492},
+            "Nana": {"lat": 13.7404, "lng": 100.5553},
+            "Asok": {"lat": 13.7371, "lng": 100.5603},
+            "Phrom Phong": {"lat": 13.7305, "lng": 100.5695},
+            "Thong Lo": {"lat": 13.7241, "lng": 100.5784},
+            "Ekkamai": {"lat": 13.7191, "lng": 100.5852},
+            "Phra Khanong": {"lat": 13.7150, "lng": 100.5991},
+            "On Nut": {"lat": 13.7059, "lng": 100.6017},
+            "Bang Chak": {"lat": 13.6967, "lng": 100.6051},
+            "Punnawithi": {"lat": 13.6925, "lng": 100.6081},
+            "Udom Suk": {"lat": 13.6790, "lng": 100.6087},
+            "Bang Na": {"lat": 13.6707, "lng": 100.6018},
+            "Bearing": {"lat": 13.6607, "lng": 100.5983},
+            "Samrong": {"lat": 13.6475, "lng": 100.5983},
+            "Pu Chao": {"lat": 13.6382, "lng": 100.6015},
+            "Chang Erawan": {"lat": 13.6316, "lng": 100.6064},
+            "Royal Thai Naval Academy": {"lat": 13.6200, "lng": 100.6111},
+            "Pak Nam": {"lat": 13.6083, "lng": 100.6000},
+            "Srinagarindra": {"lat": 13.5969, "lng": 100.6085},
+            "Phraek Sa": {"lat": 13.5861, "lng": 100.6089},
+            "Sai Luat": {"lat": 13.5771, "lng": 100.6051},
+            "Kheha": {"lat": 13.5541, "lng": 100.6062}
+          }
+        },
+        "Silom_Line": {
+          "color": "Dark Green",
+          "stations": {
+            "National Stadium": {"lat": 13.7459, "lng": 100.5284},
+            "Siam": {"lat": 13.7455, "lng": 100.5331},
+            "Ratchadamri": {"lat": 13.7396, "lng": 100.5402},
+            "Sala Daeng": {"lat": 13.7289, "lng": 100.5340},
+            "Chong Nonsi": {"lat": 13.7241, "lng": 100.5283},
+            "Saint Louis": {"lat": 13.7208, "lng": 100.5156},
+            "Surasak": {"lat": 13.7199, "lng": 100.5156},
+            "Saphan Taksin": {"lat": 13.7188, "lng": 100.5097},
+            "Krung Thon Buri": {"lat": 13.7212, "lng": 100.5025},
+            "Wongwian Yai": {"lat": 13.7268, "lng": 100.4928},
+            "Pho Nimit": {"lat": 13.7320, "lng": 100.4838},
+            "Talat Phlu": {"lat": 13.7328, "lng": 100.4742},
+            "Wutthakat": {"lat": 13.7208, "lng": 100.4666},
+            "Bang Wa": {"lat": 13.7214, "lng": 100.4567}
+          }
+        }
+      },
+      "operating_hours": "6:00 AM - 12:00 AM",
+      "fares": "16-65 THB depending on distance",
+      "tickets": "Single journey tickets or stored value Rabbit Card available"
+    },
+    "MRT_Subway": {
+      "lines": {
+        "Blue_Line": {
+          "color": "Blue",
+          "stations": {
+            "Lak Song": {"lat": 13.7111, "lng": 100.3986},
+            "Bang Khae": {"lat": 13.7122, "lng": 100.4086},
+            "Phasi Charoen": {"lat": 13.7211, "lng": 100.4325},
+            "Bang Wa": {"lat": 13.7211, "lng": 100.4567},
+            "Bang Phai": {"lat": 13.7188, "lng": 100.4653},
+            "Bang Khun Non": {"lat": 13.7268, "lng": 100.4786},
+            "Sirindhorn": {"lat": 13.7325, "lng": 100.4825},
+            "Bang Yi Khan": {"lat": 13.7532, "lng": 100.4839},
+            "Bang O": {"lat": 13.7709, "lng": 100.4822},
+            "Bang Phlat": {"lat": 13.7788, "lng": 100.5044},
+            "Tao Poon": {"lat": 13.8068, "lng": 100.5286},
+            "Bang Sue": {"lat": 13.8064, "lng": 100.5364},
+            "Kamphaeng Phet": {"lat": 13.7977, "lng": 100.5475},
+            "Chatuchak Park": {"lat": 13.8032, "lng": 100.5536},
+            "Phahon Yothin": {"lat": 13.8129, "lng": 100.5617},
+            "Lat Phrao": {"lat": 13.8161, "lng": 100.5733},
+            "Ratchadaphisek": {"lat": 13.7991, "lng": 100.5744},
+            "Sutthisan": {"lat": 13.7900, "lng": 100.5739},
+            "Huai Khwang": {"lat": 13.7787, "lng": 100.5730},
+            "Thailand Cultural Centre": {"lat": 13.7668, "lng": 100.5689},
+            "Phra Ram 9": {"lat": 13.7583, "lng": 100.5650},
+            "Phetchaburi": {"lat": 13.7493, "lng": 100.5631},
+            "Sukhumvit": {"lat": 13.7377, "lng": 100.5614},
+            "Queen Sirikit National Convention Centre": {"lat": 13.7235, "lng": 100.5596},
+            "Khlong Toei": {"lat": 13.7222, "lng": 100.5531},
+            "Lumphini": {"lat": 13.7259, "lng": 100.5456},
+            "Silom": {"lat": 13.7288, "lng": 100.5367},
+            "Sam Yan": {"lat": 13.7326, "lng": 100.5304},
+            "Hua Lamphong": {"lat": 13.7377, "lng": 100.5175},
+            "Wat Mangkon": {"lat": 13.7418, "lng": 100.5123},
