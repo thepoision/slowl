@@ -7,8 +7,8 @@ import json
 import datetime
 import re
 
-# --- Gemini Flash 2.0 API Key (Consider moving this to your secrets) ---
-genai.configure(api_key=os.getenv("GEMINI_API_KEY", "YOUR_API_KEY_HERE"))
+# --- Gemini Flash 2.0 API Key ---
+genai.configure(api_key="AIzaSyD3eVlWuVn1dYep2XOW3OaI6_g6oBy38Uk")
 model = genai.GenerativeModel("gemini-2.0-flash")
 
 # --- Load Bangkok Data ---
