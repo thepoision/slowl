@@ -62,29 +62,6 @@ st.markdown("""
         font-weight: 600;
     }
     
-    /* Chat Messages */
-    .chat-message {
-        padding: 15px;
-        border-radius: 15px;
-        margin-bottom: 10px;
-        display: inline-block;
-        max-width: 80%;
-    }
-    
-    .user-message {
-        background-color: #FF5151;
-        color: white;
-        border-bottom-right-radius: 5px;
-        float: right;
-    }
-    
-    .assistant-message {
-        background-color: #f1f1f1;
-        color: #333;
-        border-bottom-left-radius: 5px;
-        float: left;
-    }
-    
     /* Hide Hamburger Menu and Footer */
     #MainMenu, footer {
         visibility: hidden;
@@ -101,78 +78,113 @@ st.markdown("""
         100% { transform: scale(1); }
     }
     
-    /* Card Container */
+    /* Recommendation Card */
     .recommendation-card {
-        border: none !important;
-        border-radius: 12px !important;
-        box-shadow: 0 6px 12px rgba(0,0,0,0.08) !important;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        padding: 15px;
         background-color: white;
+        border-radius: 12px;
+        padding: 15px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.08);
         margin-bottom: 15px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-left: 3px solid #FF5151;
     }
     
     .recommendation-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.12) !important;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 15px rgba(0,0,0,0.12);
     }
     
-    /* Rating Stars */
-    .rating {
-        color: #FFD700;
+    /* Card title */
+    .card-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #333;
     }
     
-    /* Price Tag */
+    /* Card metadata */
+    .card-meta {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+    }
+    
+    /* Location badge */
+    .location-badge {
+        background-color: #f0f0f0;
+        padding: 3px 8px;
+        border-radius: 20px;
+        margin-right: 10px;
+        color: #555;
+        font-size: 0.8rem;
+    }
+    
+    /* Type badge */
+    .type-badge {
+        background-color: #fff0f0;
+        padding: 3px 8px;
+        border-radius: 20px;
+        color: #FF5151;
+        font-size: 0.8rem;
+    }
+    
+    /* Card footer */
+    .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+    }
+    
+    /* Price tag */
     .price-tag {
         background-color: #e9f5ff;
         color: #0077cc;
-        padding: 4px 8px;
+        padding: 3px 8px;
         border-radius: 20px;
         font-weight: 500;
-        display: inline-block;
+        font-size: 0.85rem;
     }
     
-    /* Location Badge */
-    .location-badge {
-        background-color: #f0f0f0;
-        padding: 4px 8px;
-        border-radius: 20px;
-        font-size: 0.8em;
-        margin-right: 5px;
-        color: #555;
+    /* Rating stars */
+    .rating {
+        color: #FFD700;
+        font-size: 0.9rem;
     }
     
-    /* Type Badge */
-    .type-badge {
-        background-color: #ffeeee;
-        color: #FF5151;
-        padding: 4px 8px;
-        border-radius: 20px;
-        font-size: 0.8em;
-    }
-    
-    /* Chat input container */
-    .stChatInput {
-        margin-top: 20px;
-        padding: 10px;
-        border-radius: 25px;
-        border: 1px solid #e0e0e0;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
-    
-    /* Custom colored header */
+    /* Colored header */
     .colored-header {
-        padding: 10px 15px;
+        padding: 15px;
         border-radius: 10px;
         background-color: rgba(255, 81, 81, 0.1);
         border-left: 5px solid #FF5151;
         margin-bottom: 20px;
     }
     
-    /* Add vertical space utility */
-    .vertical-space {
-        margin-top: 20px;
+    /* Section divider */
+    .section-divider {
+        margin: 15px 0;
+        border: none;
+        height: 1px;
+        background-color: #eee;
+    }
+    
+    /* Fixed height chat container */
+    .chat-container {
+        max-height: 400px;
+        overflow-y: auto;
         margin-bottom: 20px;
+        padding-right: 10px;
+    }
+    
+    /* Make chat input always visible */
+    .stChatInput {
+        position: sticky;
+        bottom: 0;
+        background-color: #f8f9fa;
+        padding: 10px 0;
+        z-index: 100;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -247,7 +259,7 @@ if "authenticated" not in st.session_state:
 if "location" not in st.session_state:
     st.session_state.location = None
 
-# --- Custom colored header replacement ---
+# --- Custom colored header ---
 def colored_header(label, description=None):
     st.markdown(f"""
     <div class="colored-header">
@@ -255,10 +267,6 @@ def colored_header(label, description=None):
         {f"<p>{description}</p>" if description else ""}
     </div>
     """, unsafe_allow_html=True)
-
-# --- Custom vertical space replacement ---
-def add_vertical_space(num_lines=1):
-    st.markdown(f'<div class="vertical-space" style="margin-top: {num_lines*20}px;"></div>', unsafe_allow_html=True)
 
 # --- Login/Register Page ---
 if not st.session_state.authenticated:
@@ -268,7 +276,7 @@ if not st.session_state.authenticated:
         st.markdown("<h1 style='text-align: center;'>🧳 Bangkok Travel Bro</h1>", unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
         
-        add_vertical_space(2)
+        st.markdown("<div style='height: 30px;'></div>", unsafe_allow_html=True)
         
         # Welcome message in a custom card
         st.markdown("""
@@ -278,12 +286,12 @@ if not st.session_state.authenticated:
         </div>
         """, unsafe_allow_html=True)
         
-        add_vertical_space(1)
+        st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
 
         email = st.text_input("📧 Email", placeholder="your.email@example.com")
         password = st.text_input("🔑 Password", placeholder="Enter password", type="password")
         
-        add_vertical_space(1)
+        st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
         
         col_login, col_register = st.columns(2)
         with col_login:
@@ -318,7 +326,7 @@ else:
             st.rerun()
     
     # Horizontal divider
-    st.markdown("<hr style='margin: 15px 0; border: none; height: 1px; background-color: #eee;'>", unsafe_allow_html=True)
+    st.markdown("<hr class='section-divider'>", unsafe_allow_html=True)
 
     # Location detection with cleaner UI
     if st.session_state.location is None:
@@ -375,44 +383,118 @@ else:
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
 
-        # Quick prompt buttons for better user experience
-        prompt_col1, prompt_col2, prompt_col3 = st.columns(3)
-        with prompt_col1:
-            if st.button("🍜 Food recommendations", use_container_width=True):
-                st.session_state.quick_prompt = "What are the best Thai dishes I should try in Bangkok?"
-                st.rerun()
-        with prompt_col2:
-            if st.button("🏯 Top attractions", use_container_width=True):
-                st.session_state.quick_prompt = "What are the must-visit attractions in Bangkok?"
-                st.rerun()
-        with prompt_col3:
-            if st.button("🛍️ Shopping spots", use_container_width=True):
-                st.session_state.quick_prompt = "Where are the best places to shop in Bangkok?"
-                st.rerun()
+        # Two separate tabs - Chat interface and previous conversations
+        chat_tab, history_tab = st.tabs(["💬 Chat", "📜 Previous Conversations"])
+        
+        with chat_tab:
+            # Quick prompt buttons for better user experience
+            prompt_col1, prompt_col2, prompt_col3 = st.columns(3)
+            with prompt_col1:
+                if st.button("🍜 Food recommendations", use_container_width=True):
+                    st.session_state.quick_prompt = "What are the best Thai dishes I should try in Bangkok?"
+            with prompt_col2:
+                if st.button("🏯 Top attractions", use_container_width=True):
+                    st.session_state.quick_prompt = "What are the must-visit attractions in Bangkok?"
+            with prompt_col3:
+                if st.button("🛍️ Shopping spots", use_container_width=True):
+                    st.session_state.quick_prompt = "Where are the best places to shop in Bangkok?"
+            
+            # Most recent chat message only
+            if st.session_state.chat_history:
+                latest_chat = st.session_state.chat_history[-1]
+                
+                # Show the most recent conversation
+                st.chat_message("user").markdown(latest_chat['user'])
+                
+                # Process the assistant's response
+                assistant_reply = latest_chat['assistant']
+                
+                # Check if the response has card data embedded within it
+                try:
+                    # Find all JSON card structures in the text
+                    card_matches = re.finditer(r'(\{.*?"cards"\s*:\s*\[.*?\]\s*\})', assistant_reply, re.DOTALL)
+                    
+                    # Store the positions where JSON needs to be replaced
+                    replacements = []
+                    
+                    for match in card_matches:
+                        card_json_str = match.group(1)
+                        start_pos = match.start(1)
+                        end_pos = match.end(1)
+                        
+                        try:
+                            card_data = json.loads(card_json_str)
+                            
+                            # Format for proper display (to be inserted later)
+                            formatted_html = ""
+                            for card in card_data.get("cards", []):
+                                formatted_html += f"""
+                                <div class="recommendation-card">
+                                    <div class="card-title">{card.get('name', 'Unnamed')}</div>
+                                    <div class="card-meta">
+                                        <span class="location-badge">📍 {card.get('location', 'Unknown')}</span>
+                                        <span class="type-badge">{card.get('type', 'Unknown').title()}</span>
+                                    </div>
+                                    <div class="card-footer">
+                                        <span class="price-tag">฿{card.get('price', 'N/A')} THB</span>
+                                        <span class="rating">{"⭐" * int(float(card.get('rating', 0))) if card.get('rating') not in ['N/A', None] else ""} {card.get('rating', '')}</span>
+                                    </div>
+                                </div>
+                                """
+                            
+                            # Add to replacements list
+                            replacements.append((start_pos, end_pos, formatted_html))
+                            
+                        except json.JSONDecodeError:
+                            # If JSON parsing fails, leave as is
+                            continue
+                    
+                    # Apply replacements in reverse order to maintain positions
+                    cleaned_reply = assistant_reply
+                    for start_pos, end_pos, formatted_html in sorted(replacements, reverse=True):
+                        cleaned_reply = cleaned_reply[:start_pos] + formatted_html + cleaned_reply[end_pos:]
+                    
+                    # Display the processed reply
+                    st.chat_message("assistant").markdown(cleaned_reply, unsafe_allow_html=True)
+                    
+                except Exception as e:
+                    # Fallback to displaying original text
+                    st.chat_message("assistant").markdown(assistant_reply)
+            
+            # Chat input - ensure it's always visible
+            st.markdown('<div id="chat-input-anchor"></div>', unsafe_allow_html=True)
+            if "quick_prompt" in st.session_state:
+                user_input = st.session_state.quick_prompt
+                del st.session_state.quick_prompt
+                # Process input immediately
+                if user_input:
+                    # New message from quick prompt
+                    st.chat_message("user").markdown(user_input)
+                    # Schedule processing for next rerun
+                    st.session_state.process_input = user_input
+                    st.rerun()
+            else:
+                user_input = st.chat_input("Ask anything about Bangkok...", key="user_chat_input")
+        
+        # Previous conversations tab
+        with history_tab:
+            if st.session_state.chat_history:
+                for i, chat in enumerate(reversed(st.session_state.chat_history), 1):
+                    with st.expander(f"Chat {i}: {chat['user'][:40]}{'...' if len(chat['user']) > 40 else ''}", expanded=False):
+                        st.markdown(f"**You:** {chat['user']}")
+                        st.markdown(f"**Bro:** {chat['assistant']}")
+            else:
+                st.info("No previous conversations yet")
 
-        # Previous conversation toggle
-        if st.session_state.chat_history:
-            with st.expander("📂 Previous Conversations", expanded=False):
-                for i, chat in enumerate(reversed(st.session_state.chat_history[-10:]), 1):
-                    st.markdown(f"**You:** {chat['user']}")
-                    st.markdown(f"**Bro:** {chat['assistant']}")
-                    st.markdown("<hr style='margin: 10px 0; border: none; height: 1px; background-color: #eee;'>", unsafe_allow_html=True)
-
-        # Chat messages container
-        chat_container = st.container()
-        with chat_container:
-            for chat in st.session_state.chat_history[-5:]:
-                st.chat_message("user").markdown(chat['user'])
-                st.chat_message("assistant").markdown(chat['assistant'])
-
-        # Chat input
-        if "quick_prompt" in st.session_state:
-            user_input = st.session_state.quick_prompt
-            del st.session_state.quick_prompt
-        else:
-            user_input = st.chat_input("Ask anything about Bangkok...", key="user_chat_input")
-
-        if user_input:
+        # Process scheduled input or direct user input
+        process_input = None
+        if "process_input" in st.session_state:
+            process_input = st.session_state.process_input
+            del st.session_state.process_input
+        elif user_input:
+            process_input = user_input
+            
+        if process_input:
             context = st.session_state.user_context
 
             def format_data_snippet(data, limit_per_category=5):
@@ -457,63 +539,22 @@ User preferences:
 Chat so far:
 {past_chat}
 
-User: {user_input}
+User: {process_input}
 
 Respond in {context['language']}. Be smart, friendly, casual. Keep the flow.
 """
-            # Show user message immediately
-            st.chat_message("user").markdown(user_input)
-            
             with st.spinner("Finding the best spots for you... 🌟"):
                 response = model.generate_content(prompt)
                 reply = response.text
 
-            try:
-                card_json_match = re.search(r'\{.*"cards"\s*:\s*\[.*\]\s*\}', reply, re.DOTALL)
-                if card_json_match:
-                    parsed = json.loads(card_json_match.group())
-                    intro_text = reply.split(card_json_match.group())[0].strip()
-                    
-                    # Show intro text
-                    if intro_text:
-                        st.chat_message("assistant").markdown(intro_text)
-                    
-                    # Show recommendations as modern cards
-                    st.markdown("<h4>🌟 Recommended Places</h4>", unsafe_allow_html=True)
-                    
-                    # Create a grid of cards
-                    num_cards = len(parsed["cards"])
-                    cols_per_row = min(3, num_cards) if num_cards > 1 else 1
-                    
-                    for i in range(0, num_cards, cols_per_row):
-                        cols = st.columns(min(cols_per_row, num_cards - i))
-                        for j in range(min(cols_per_row, num_cards - i)):
-                            card_index = i + j
-                            card = parsed["cards"][card_index]
-                            with cols[j]:
-                                st.markdown(f"""
-                                <div class="recommendation-card">
-                                    <h3>{card['name']}</h3>
-                                    <div>
-                                        <span class="location-badge">📍 {card['location']}</span>
-                                        <span class="type-badge">{card['type'].title()}</span>
-                                    </div>
-                                    <div style="margin-top: 10px;">
-                                        <span class="price-tag">฿{card['price']} THB</span>
-                                        <span class="rating">{"⭐" * int(float(card['rating']))}</span> {card['rating']}
-                                    </div>
-                                </div>
-                                """, unsafe_allow_html=True)
-                                st.button(card.get("button", "View Details"), key=f"btn_{card['name']}")
-                else:
-                    st.chat_message("assistant").markdown(reply)
-            except Exception as e:
-                st.chat_message("assistant").markdown(reply)
-
+            # Record the chat history but don't display yet - will show on next reload
             st.session_state.chat_history.append({
-                "user": user_input,
+                "user": process_input,
                 "assistant": reply
             })
 
             save_convo(st.session_state.email, st.session_state.chat_history)
             st.toast("Saved to your travel journal ✅")
+            
+            # Force reload to display the new chat
+            st.rerun()
