@@ -4,9 +4,6 @@ import os
 import json
 import datetime
 import re
-from streamlit_extras.colored_header import colored_header
-from streamlit_extras.add_vertical_space import add_vertical_space
-from streamlit_extras.switch_page_button import switch_page
 
 # --- Page Configuration with custom theme ---
 st.set_page_config(
@@ -110,6 +107,9 @@ st.markdown("""
         border-radius: 12px !important;
         box-shadow: 0 6px 12px rgba(0,0,0,0.08) !important;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
+        padding: 15px;
+        background-color: white;
+        margin-bottom: 15px;
     }
     
     .recommendation-card:hover {
@@ -158,6 +158,21 @@ st.markdown("""
         border-radius: 25px;
         border: 1px solid #e0e0e0;
         box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    /* Custom colored header */
+    .colored-header {
+        padding: 10px 15px;
+        border-radius: 10px;
+        background-color: rgba(255, 81, 81, 0.1);
+        border-left: 5px solid #FF5151;
+        margin-bottom: 20px;
+    }
+    
+    /* Add vertical space utility */
+    .vertical-space {
+        margin-top: 20px;
+        margin-bottom: 20px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -231,6 +246,19 @@ if "authenticated" not in st.session_state:
 # --- Store Location in Session State ---
 if "location" not in st.session_state:
     st.session_state.location = None
+
+# --- Custom colored header replacement ---
+def colored_header(label, description=None):
+    st.markdown(f"""
+    <div class="colored-header">
+        <h3>{label}</h3>
+        {f"<p>{description}</p>" if description else ""}
+    </div>
+    """, unsafe_allow_html=True)
+
+# --- Custom vertical space replacement ---
+def add_vertical_space(num_lines=1):
+    st.markdown(f'<div class="vertical-space" style="margin-top: {num_lines*20}px;"></div>', unsafe_allow_html=True)
 
 # --- Login/Register Page ---
 if not st.session_state.authenticated:
@@ -342,11 +370,7 @@ else:
 
     # Chat Interface
     if "user_context" in st.session_state:
-        colored_header(
-            label="Let's Plan Your Bangkok Adventure",
-            description="Ask me anything about Bangkok, from food to sights!",
-            color_name="red-70"
-        )
+        colored_header("Let's Plan Your Bangkok Adventure", "Ask me anything about Bangkok, from food to sights!")
 
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
@@ -458,12 +482,15 @@ Respond in {context['language']}. Be smart, friendly, casual. Keep the flow.
                     st.markdown("<h4>🌟 Recommended Places</h4>", unsafe_allow_html=True)
                     
                     # Create a grid of cards
-                    cols = st.columns(min(3, len(parsed["cards"])) if len(parsed["cards"]) > 1 else 1)
+                    num_cards = len(parsed["cards"])
+                    cols_per_row = min(3, num_cards) if num_cards > 1 else 1
                     
-                    for i, card in enumerate(parsed["cards"]):
-                        col_index = i % len(cols)
-                        with cols[col_index]:
-                            with st.container():
+                    for i in range(0, num_cards, cols_per_row):
+                        cols = st.columns(min(cols_per_row, num_cards - i))
+                        for j in range(min(cols_per_row, num_cards - i)):
+                            card_index = i + j
+                            card = parsed["cards"][card_index]
+                            with cols[j]:
                                 st.markdown(f"""
                                 <div class="recommendation-card">
                                     <h3>{card['name']}</h3>
