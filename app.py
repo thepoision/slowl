@@ -1,11 +1,166 @@
 import streamlit as st
-st.set_page_config(page_title="Bangkok Travel Bro", page_icon="🧲", layout="centered")
-
 import google.generativeai as genai
 import os
 import json
 import datetime
 import re
+from streamlit_extras.colored_header import colored_header
+from streamlit_extras.add_vertical_space import add_vertical_space
+from streamlit_extras.switch_page_button import switch_page
+
+# --- Page Configuration with custom theme ---
+st.set_page_config(
+    page_title="Bangkok Travel Bro",
+    page_icon="🧳",
+    layout="centered",
+    initial_sidebar_state="collapsed"
+)
+
+# --- Custom CSS for a modern, minimal look ---
+st.markdown("""
+<style>
+    /* Global Styles */
+    .main {
+        background-color: #f8f9fa;
+        color: #212529;
+    }
+    
+    /* Custom Card Styling */
+    .custom-card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        margin-bottom: 20px;
+        border-left: 4px solid #FF5151;
+    }
+    
+    /* Button Styling */
+    .stButton > button {
+        background-color: #FF5151;
+        color: white;
+        border-radius: 20px;
+        border: none;
+        padding: 8px 16px;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+    
+    .stButton > button:hover {
+        background-color: #E73E3E;
+        box-shadow: 0 5px 10px rgba(231, 62, 62, 0.2);
+        transform: translateY(-2px);
+    }
+    
+    /* Input Fields */
+    .stTextInput input, .stNumberInput input, .stDateInput input {
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        padding: 10px;
+    }
+    
+    /* Headers */
+    h1, h2, h3 {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+    }
+    
+    /* Chat Messages */
+    .chat-message {
+        padding: 15px;
+        border-radius: 15px;
+        margin-bottom: 10px;
+        display: inline-block;
+        max-width: 80%;
+    }
+    
+    .user-message {
+        background-color: #FF5151;
+        color: white;
+        border-bottom-right-radius: 5px;
+        float: right;
+    }
+    
+    .assistant-message {
+        background-color: #f1f1f1;
+        color: #333;
+        border-bottom-left-radius: 5px;
+        float: left;
+    }
+    
+    /* Hide Hamburger Menu and Footer */
+    #MainMenu, footer {
+        visibility: hidden;
+    }
+    
+    /* Logo Animation */
+    .logo-pulse {
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    /* Card Container */
+    .recommendation-card {
+        border: none !important;
+        border-radius: 12px !important;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08) !important;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .recommendation-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.12) !important;
+    }
+    
+    /* Rating Stars */
+    .rating {
+        color: #FFD700;
+    }
+    
+    /* Price Tag */
+    .price-tag {
+        background-color: #e9f5ff;
+        color: #0077cc;
+        padding: 4px 8px;
+        border-radius: 20px;
+        font-weight: 500;
+        display: inline-block;
+    }
+    
+    /* Location Badge */
+    .location-badge {
+        background-color: #f0f0f0;
+        padding: 4px 8px;
+        border-radius: 20px;
+        font-size: 0.8em;
+        margin-right: 5px;
+        color: #555;
+    }
+    
+    /* Type Badge */
+    .type-badge {
+        background-color: #ffeeee;
+        color: #FF5151;
+        padding: 4px 8px;
+        border-radius: 20px;
+        font-size: 0.8em;
+    }
+    
+    /* Chat input container */
+    .stChatInput {
+        margin-top: 20px;
+        padding: 10px;
+        border-radius: 25px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+</style>
+""", unsafe_allow_html=True)
 
 # --- Gemini Flash 2.0 API Key ---
 genai.configure(api_key="AIzaSyD3eVlWuVn1dYep2XOW3OaI6_g6oBy38Uk")
@@ -79,58 +234,101 @@ if "location" not in st.session_state:
 
 # --- Login/Register Page ---
 if not st.session_state.authenticated:
-    st.markdown("<h1 style='text-align: center;'>🧲 Bangkok Travel Bro</h1>", unsafe_allow_html=True)
-    st.markdown("#### 🚀 Sign in to start planning your Bangkok adventure!")
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        st.markdown('<div class="logo-pulse">', unsafe_allow_html=True)
+        st.markdown("<h1 style='text-align: center;'>🧳 Bangkok Travel Bro</h1>", unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+        add_vertical_space(2)
+        
+        # Welcome message in a custom card
+        st.markdown("""
+        <div class="custom-card">
+            <h3>Welcome Explorer!</h3>
+            <p>Sign in to discover Bangkok's hidden gems, get personalized recommendations, and plan your perfect trip.</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        add_vertical_space(1)
 
-    with st.container():
-        email = st.text_input("📧 Email", placeholder="Enter your email")
+        email = st.text_input("📧 Email", placeholder="your.email@example.com")
         password = st.text_input("🔑 Password", placeholder="Enter password", type="password")
-        col1, col2 = st.columns(2)
-        with col1:
-            login_btn = st.button("🚪 Login")
-        with col2:
-            register_btn = st.button("📝 Register")
+        
+        add_vertical_space(1)
+        
+        col_login, col_register = st.columns(2)
+        with col_login:
+            login_btn = st.button("🚪 Login", use_container_width=True)
+        with col_register:
+            register_btn = st.button("📝 Register", use_container_width=True)
 
     if login_btn:
         if authenticate(email, password):
             st.session_state.authenticated = True
             st.session_state.email = email
-            st.success("You're in, bro! 🎉")
+            st.success("Welcome back! Let's explore Bangkok together 🎉")
+            st.rerun()
         else:
-            st.error("Wrong email or password 💀")
+            st.error("Incorrect email or password 🔐")
 
     if register_btn:
         save_user(email, password)
-        st.success("Boom. You're registered. Now log in! 🔓")
+        st.success("Successfully registered! Please log in to continue 🔓")
 
 # --- Main App After Login ---
 else:
-    st.markdown("<h1 style='text-align: center;'>🏕️ Plan Your Trip With Your AI Bro</h1>", unsafe_allow_html=True)
-    st.markdown(f"<h3 style='text-align: center;'>{greet_user()}</h3>", unsafe_allow_html=True)
-    st.markdown("---")
+    # Header area with dynamic greeting
+    col_header1, col_header2 = st.columns([3, 1])
+    with col_header1:
+        st.markdown(f"<h1>🧳 Bangkok Travel Bro</h1>", unsafe_allow_html=True)
+        st.markdown(f"<h4>{greet_user()}</h4>", unsafe_allow_html=True)
+    
+    with col_header2:
+        if st.button("🚪 Logout"):
+            st.session_state.authenticated = False
+            st.rerun()
+    
+    # Horizontal divider
+    st.markdown("<hr style='margin: 15px 0; border: none; height: 1px; background-color: #eee;'>", unsafe_allow_html=True)
 
+    # Location detection with cleaner UI
     if st.session_state.location is None:
-        if st.button("📍 Detect My Current Location"):
-            st.session_state.location = {"latitude": 13.7563, "longitude": 100.5018}
-            st.success(f"Location detected: {st.session_state.location['latitude']}, {st.session_state.location['longitude']}")
+        location_col1, location_col2 = st.columns([3, 1])
+        with location_col1:
+            st.info("📍 Enable location to get nearby recommendations")
+        with location_col2:
+            if st.button("Detect Location", key="detect_location"):
+                st.session_state.location = {"latitude": 13.7563, "longitude": 100.5018}
+                st.success("📍 Bangkok, Thailand detected")
+                st.rerun()
 
+    # Trip Information Form
     if "user_context" not in st.session_state:
-        st.markdown("#### 🌍 Tell me a bit about your trip:")
-        with st.form("user_info"):
+        st.markdown("""
+        <div class="custom-card">
+            <h3>✈️ Tell us about your trip</h3>
+            <p>Help us personalize your Bangkok experience</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        with st.form("user_info", clear_on_submit=False):
             col1, col2 = st.columns(2)
             with col1:
-                language = st.selectbox("🌐 Preferred Language", 
-                                        ["English 🇬🇧", "Malay 🇲🇾", "Hindi 🇮🇳", "Chinese 🇨🇳"])
+                language = st.selectbox("🌐 Language", 
+                                      ["English 🇬🇧", "Malay 🇲🇾", "Hindi 🇮🇳", "Chinese 🇨🇳"])
             with col2:
-                budget = st.number_input("💰 Your Budget (THB)", min_value=1000)
+                budget = st.number_input("💰 Budget (THB)", min_value=1000, value=5000, step=1000)
 
             col3, col4 = st.columns(2)
             with col3:
-                start_date = st.date_input("🗓 Start Date")
+                start_date = st.date_input("🗓 From")
             with col4:
-                end_date = st.date_input("🗓 End Date")
+                end_date = st.date_input("🗓 To")
 
-            submitted = st.form_submit_button("✅ Save Trip Info")
+            submit_col1, submit_col2 = st.columns([3, 1])
+            with submit_col2:
+                submitted = st.form_submit_button("Start Planning →", use_container_width=True)
 
             if submitted:
                 st.session_state.user_context = {
@@ -139,22 +337,56 @@ else:
                     "start_date": str(start_date),
                     "end_date": str(end_date),
                 }
-                st.success("All set! Let’s chat 🤙")
                 st.balloons()
+                st.rerun()
 
+    # Chat Interface
     if "user_context" in st.session_state:
-        st.markdown("### 💬 Ask me anything about Bangkok:")
+        colored_header(
+            label="Let's Plan Your Bangkok Adventure",
+            description="Ask me anything about Bangkok, from food to sights!",
+            color_name="red-70"
+        )
 
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
 
-        with st.expander("📂 View Prev. Convo", expanded=False):
-            for i, chat in enumerate(reversed(st.session_state.chat_history[-20:]), 1):
-                st.markdown(f"**{i}:** {chat['user']}")
-                st.markdown(f"<span style='color: gray;'>{i}: {chat['assistant']}</span>", unsafe_allow_html=True)
-                st.markdown("---")
+        # Quick prompt buttons for better user experience
+        prompt_col1, prompt_col2, prompt_col3 = st.columns(3)
+        with prompt_col1:
+            if st.button("🍜 Food recommendations", use_container_width=True):
+                st.session_state.quick_prompt = "What are the best Thai dishes I should try in Bangkok?"
+                st.rerun()
+        with prompt_col2:
+            if st.button("🏯 Top attractions", use_container_width=True):
+                st.session_state.quick_prompt = "What are the must-visit attractions in Bangkok?"
+                st.rerun()
+        with prompt_col3:
+            if st.button("🛍️ Shopping spots", use_container_width=True):
+                st.session_state.quick_prompt = "Where are the best places to shop in Bangkok?"
+                st.rerun()
 
-        user_input = st.chat_input("Type here, bro...")
+        # Previous conversation toggle
+        if st.session_state.chat_history:
+            with st.expander("📂 Previous Conversations", expanded=False):
+                for i, chat in enumerate(reversed(st.session_state.chat_history[-10:]), 1):
+                    st.markdown(f"**You:** {chat['user']}")
+                    st.markdown(f"**Bro:** {chat['assistant']}")
+                    st.markdown("<hr style='margin: 10px 0; border: none; height: 1px; background-color: #eee;'>", unsafe_allow_html=True)
+
+        # Chat messages container
+        chat_container = st.container()
+        with chat_container:
+            for chat in st.session_state.chat_history[-5:]:
+                st.chat_message("user").markdown(chat['user'])
+                st.chat_message("assistant").markdown(chat['assistant'])
+
+        # Chat input
+        if "quick_prompt" in st.session_state:
+            user_input = st.session_state.quick_prompt
+            del st.session_state.quick_prompt
+        else:
+            user_input = st.chat_input("Ask anything about Bangkok...", key="user_chat_input")
 
         if user_input:
             context = st.session_state.user_context
@@ -205,31 +437,47 @@ User: {user_input}
 
 Respond in {context['language']}. Be smart, friendly, casual. Keep the flow.
 """
-            with st.spinner("Your bro is thinking... 💭"):
+            # Show user message immediately
+            st.chat_message("user").markdown(user_input)
+            
+            with st.spinner("Finding the best spots for you... 🌟"):
                 response = model.generate_content(prompt)
                 reply = response.text
-
-            st.chat_message("user").markdown(user_input)
 
             try:
                 card_json_match = re.search(r'\{.*"cards"\s*:\s*\[.*\]\s*\}', reply, re.DOTALL)
                 if card_json_match:
                     parsed = json.loads(card_json_match.group())
                     intro_text = reply.split(card_json_match.group())[0].strip()
+                    
+                    # Show intro text
                     if intro_text:
                         st.chat_message("assistant").markdown(intro_text)
-                    st.markdown("**Here are some awesome picks for you:**")
-                    for card in parsed["cards"]:
-                        with st.container(border=True):
-                            st.markdown(f"### {card['name']}")
-                            col1, col2 = st.columns(2)
-                            with col1:
-                                st.markdown(f"**Location:** {card['location']}")
-                                st.markdown(f"**Type:** {card['type'].title()}")
-                            with col2:
-                                st.markdown(f"**Price:** {card['price']} THB")
-                                st.markdown(f"**Rating:** {card['rating']} ⭐")
-                            st.button(card.get("button", "Select"), key=card['name'])
+                    
+                    # Show recommendations as modern cards
+                    st.markdown("<h4>🌟 Recommended Places</h4>", unsafe_allow_html=True)
+                    
+                    # Create a grid of cards
+                    cols = st.columns(min(3, len(parsed["cards"])) if len(parsed["cards"]) > 1 else 1)
+                    
+                    for i, card in enumerate(parsed["cards"]):
+                        col_index = i % len(cols)
+                        with cols[col_index]:
+                            with st.container():
+                                st.markdown(f"""
+                                <div class="recommendation-card">
+                                    <h3>{card['name']}</h3>
+                                    <div>
+                                        <span class="location-badge">📍 {card['location']}</span>
+                                        <span class="type-badge">{card['type'].title()}</span>
+                                    </div>
+                                    <div style="margin-top: 10px;">
+                                        <span class="price-tag">฿{card['price']} THB</span>
+                                        <span class="rating">{"⭐" * int(float(card['rating']))}</span> {card['rating']}
+                                    </div>
+                                </div>
+                                """, unsafe_allow_html=True)
+                                st.button(card.get("button", "View Details"), key=f"btn_{card['name']}")
                 else:
                     st.chat_message("assistant").markdown(reply)
             except Exception as e:
@@ -241,4 +489,4 @@ Respond in {context['language']}. Be smart, friendly, casual. Keep the flow.
             })
 
             save_convo(st.session_state.email, st.session_state.chat_history)
-            st.toast("📂 Saved that convo, bro!")
+            st.toast("Saved to your travel journal ✅")
