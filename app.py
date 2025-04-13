@@ -268,6 +268,68 @@ def colored_header(label, description=None):
     </div>
     """, unsafe_allow_html=True)
 
+# --- Function to process AI response ---
+def process_response(assistant_reply):
+    # First, check if the response contains JSON card structure
+    try:
+        card_matches = re.finditer(r'(\{.*?"cards"\s*:\s*\[.*?\]\s*\})', assistant_reply, re.DOTALL)
+        replacements = []
+        
+        for match in card_matches:
+            card_json_str = match.group(1)
+            start_pos = match.start(1)
+            end_pos = match.end(1)
+            
+            try:
+                card_data = json.loads(card_json_str)
+                
+                formatted_html = ""
+                for card in card_data.get("cards", []):
+                    formatted_html += f"""
+                    <div class="recommendation-card">
+                        <div class="card-title">{card.get('name', 'Unnamed')}</div>
+                        <div class="card-meta">
+                            <span class="location-badge">📍 {card.get('location', 'Unknown')}</span>
+                            <span class="type-badge">{card.get('type', 'Unknown').title()}</span>
+                        </div>
+                        <div class="card-footer">
+                            <span class="price-tag">฿{card.get('price', 'N/A')} THB</span>
+                            <span class="rating">{"⭐" * int(float(card.get('rating', 0))) if card.get('rating') not in ['N/A', None] else ""} {card.get('rating', '')}</span>
+                        </div>
+                    </div>
+                    """
+                
+                replacements.append((start_pos, end_pos, formatted_html))
+                
+            except json.JSONDecodeError:
+                continue
+        
+        cleaned_reply = assistant_reply
+        for start_pos, end_pos, formatted_html in sorted(replacements, reverse=True):
+            cleaned_reply = cleaned_reply[:start_pos] + formatted_html + cleaned_reply[end_pos:]
+        
+        # If we processed some JSON cards successfully, return the result
+        if replacements:
+            return cleaned_reply, True
+    except Exception as e:
+        pass
+    
+    # If no JSON processing happened or it failed, check for HTML card structures directly
+    try:
+        # Look for HTML recommendation card sections in code blocks
+        code_blocks = re.findall(r'```(.*?)```', assistant_reply, re.DOTALL)
+        
+        for block in code_blocks:
+            if '<div class="recommendation-card">' in block:
+                # This is an HTML card block that wasn't properly rendered
+                cleaned_reply = assistant_reply.replace(f"```{block}```", block)
+                return cleaned_reply, True
+    except Exception as e:
+        pass
+    
+    # If nothing worked, return the original text
+    return assistant_reply, False
+
 # --- Login/Register Page ---
 if not st.session_state.authenticated:
     col1, col2, col3 = st.columns([1, 2, 1])
@@ -399,67 +461,20 @@ else:
                 if st.button("🛍️ Shopping spots", use_container_width=True):
                     st.session_state.quick_prompt = "Where are the best places to shop in Bangkok?"
             
-            # Most recent chat message only
-            if st.session_state.chat_history:
-                latest_chat = st.session_state.chat_history[-1]
+            # Display all chat history for a better user experience
+            st.markdown('<div class="chat-container">', unsafe_allow_html=True)
+            for chat in st.session_state.chat_history:
+                st.chat_message("user").markdown(chat['user'])
                 
-                # Show the most recent conversation
-                st.chat_message("user").markdown(latest_chat['user'])
+                # Use our new processing function to handle the assistant's response
+                processed_reply, has_html = process_response(chat['assistant'])
                 
-                # Process the assistant's response
-                assistant_reply = latest_chat['assistant']
-                
-                # Check if the response has card data embedded within it
-                try:
-                    # Find all JSON card structures in the text
-                    card_matches = re.finditer(r'(\{.*?"cards"\s*:\s*\[.*?\]\s*\})', assistant_reply, re.DOTALL)
-                    
-                    # Store the positions where JSON needs to be replaced
-                    replacements = []
-                    
-                    for match in card_matches:
-                        card_json_str = match.group(1)
-                        start_pos = match.start(1)
-                        end_pos = match.end(1)
-                        
-                        try:
-                            card_data = json.loads(card_json_str)
-                            
-                            # Format for proper display (to be inserted later)
-                            formatted_html = ""
-                            for card in card_data.get("cards", []):
-                                formatted_html += f"""
-                                <div class="recommendation-card">
-                                    <div class="card-title">{card.get('name', 'Unnamed')}</div>
-                                    <div class="card-meta">
-                                        <span class="location-badge">📍 {card.get('location', 'Unknown')}</span>
-                                        <span class="type-badge">{card.get('type', 'Unknown').title()}</span>
-                                    </div>
-                                    <div class="card-footer">
-                                        <span class="price-tag">฿{card.get('price', 'N/A')} THB</span>
-                                        <span class="rating">{"⭐" * int(float(card.get('rating', 0))) if card.get('rating') not in ['N/A', None] else ""} {card.get('rating', '')}</span>
-                                    </div>
-                                </div>
-                                """
-                            
-                            # Add to replacements list
-                            replacements.append((start_pos, end_pos, formatted_html))
-                            
-                        except json.JSONDecodeError:
-                            # If JSON parsing fails, leave as is
-                            continue
-                    
-                    # Apply replacements in reverse order to maintain positions
-                    cleaned_reply = assistant_reply
-                    for start_pos, end_pos, formatted_html in sorted(replacements, reverse=True):
-                        cleaned_reply = cleaned_reply[:start_pos] + formatted_html + cleaned_reply[end_pos:]
-                    
-                    # Display the processed reply
-                    st.chat_message("assistant").markdown(cleaned_reply, unsafe_allow_html=True)
-                    
-                except Exception as e:
-                    # Fallback to displaying original text
-                    st.chat_message("assistant").markdown(assistant_reply)
+                # Use markdown with unsafe_allow_html when needed
+                if has_html:
+                    st.chat_message("assistant").markdown(processed_reply, unsafe_allow_html=True)
+                else:
+                    st.chat_message("assistant").markdown(processed_reply)
+            st.markdown('</div>', unsafe_allow_html=True)
             
             # Chat input - ensure it's always visible
             st.markdown('<div id="chat-input-anchor"></div>', unsafe_allow_html=True)
@@ -482,7 +497,12 @@ else:
                 for i, chat in enumerate(reversed(st.session_state.chat_history), 1):
                     with st.expander(f"Chat {i}: {chat['user'][:40]}{'...' if len(chat['user']) > 40 else ''}", expanded=False):
                         st.markdown(f"**You:** {chat['user']}")
-                        st.markdown(f"**Bro:** {chat['assistant']}")
+                        # Process assistant response for display in history too
+                        processed_reply, has_html = process_response(chat['assistant'])
+                        if has_html:
+                            st.markdown(f"**Bro:** {processed_reply}", unsafe_allow_html=True)
+                        else:
+                            st.markdown(f"**Bro:** {processed_reply}")
             else:
                 st.info("No previous conversations yet")
 
@@ -524,8 +544,23 @@ else:
             prompt = f"""
 You're a helpful and chill AI travel bro for someone visiting Bangkok.
 If it's appropriate, show a brief intro paragraph followed by a list of recommendations.
-Use this format when showing structured results:
+
+PREFERRED FORMAT: When showing structured results, use this JSON format:
 {{"cards": [{{"name": "Name", "price": 250, "rating": 4.3, "location": "Area", "type": "hostel", "button": "Book Now"}}]}}
+
+ALTERNATIVE FORMAT: If you're going to show HTML cards directly, DO NOT wrap them in code blocks or backticks.
+Each card should have this structure:
+<div class="recommendation-card">
+    <div class="card-title">Place Name</div>
+    <div class="card-meta">
+        <span class="location-badge">📍 Area</span>
+        <span class="type-badge">Type</span>
+    </div>
+    <div class="card-footer">
+        <span class="price-tag">฿Price THB</span>
+        <span class="rating">⭐⭐⭐⭐ Rating</span>
+    </div>
+</div>
 
 ONLY use this data when recommending places:
 {data_snippet}
