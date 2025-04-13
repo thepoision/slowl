@@ -5,21 +5,39 @@ import json
 import datetime
 import re
 
-# --- Page Configuration with custom theme ---
+# --- Page Configuration with owl theme ---
 st.set_page_config(
-    page_title="Bangkok Travel Bro",
-    page_icon="🧳",
+    page_title="Bangkok Travel Owl",
+    page_icon="🦉",
     layout="centered",
     initial_sidebar_state="collapsed"
 )
 
-# --- Custom CSS for a modern, minimal look ---
+# --- Custom CSS for a modern, owl-themed, mobile-responsive look ---
 st.markdown("""
 <style>
     /* Global Styles */
     .main {
         background-color: #f8f9fa;
         color: #212529;
+        max-width: 100% !important;
+        padding: 1rem;
+    }
+    
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+        .main {
+            padding: 0.5rem;
+        }
+        .custom-card {
+            padding: 15px;
+        }
+        h1 {
+            font-size: 1.5rem !important;
+        }
+        h3 {
+            font-size: 1.2rem !important;
+        }
     }
     
     /* Custom Card Styling */
@@ -29,12 +47,12 @@ st.markdown("""
         padding: 20px;
         box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         margin-bottom: 20px;
-        border-left: 4px solid #FF5151;
+        border-left: 4px solid #8B5D33; /* Owl-themed brown */
     }
     
     /* Button Styling */
     .stButton > button {
-        background-color: #FF5151;
+        background-color: #8B5D33; /* Owl-themed brown */
         color: white;
         border-radius: 20px;
         border: none;
@@ -44,8 +62,8 @@ st.markdown("""
     }
     
     .stButton > button:hover {
-        background-color: #E73E3E;
-        box-shadow: 0 5px 10px rgba(231, 62, 62, 0.2);
+        background-color: #6E4A26; /* Darker brown */
+        box-shadow: 0 5px 10px rgba(110, 74, 38, 0.2);
         transform: translateY(-2px);
     }
     
@@ -86,7 +104,7 @@ st.markdown("""
         box-shadow: 0 4px 10px rgba(0,0,0,0.08);
         margin-bottom: 15px;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
-        border-left: 3px solid #FF5151;
+        border-left: 3px solid #8B5D33; /* Owl-themed brown */
     }
     
     .recommendation-card:hover {
@@ -108,6 +126,7 @@ st.markdown("""
         align-items: center;
         margin-bottom: 10px;
         font-size: 0.9rem;
+        flex-wrap: wrap; /* Better for mobile */
     }
     
     /* Location badge */
@@ -116,17 +135,19 @@ st.markdown("""
         padding: 3px 8px;
         border-radius: 20px;
         margin-right: 10px;
+        margin-bottom: 5px; /* For mobile wrapping */
         color: #555;
         font-size: 0.8rem;
     }
     
     /* Type badge */
     .type-badge {
-        background-color: #fff0f0;
+        background-color: #FFF8E8; /* Light owl/wheat color */
         padding: 3px 8px;
         border-radius: 20px;
-        color: #FF5151;
+        color: #8B5D33; /* Owl-themed brown */
         font-size: 0.8rem;
+        margin-bottom: 5px; /* For mobile wrapping */
     }
     
     /* Card footer */
@@ -135,16 +156,18 @@ st.markdown("""
         justify-content: space-between;
         align-items: center;
         margin-top: 10px;
+        flex-wrap: wrap; /* Better for mobile */
     }
     
     /* Price tag */
     .price-tag {
-        background-color: #e9f5ff;
+        background-color: #E8F0FF;
         color: #0077cc;
         padding: 3px 8px;
         border-radius: 20px;
         font-weight: 500;
         font-size: 0.85rem;
+        margin-bottom: 5px; /* For mobile wrapping */
     }
     
     /* Rating stars */
@@ -157,8 +180,8 @@ st.markdown("""
     .colored-header {
         padding: 15px;
         border-radius: 10px;
-        background-color: rgba(255, 81, 81, 0.1);
-        border-left: 5px solid #FF5151;
+        background-color: rgba(139, 93, 51, 0.1); /* Owl-themed brown with opacity */
+        border-left: 5px solid #8B5D33; /* Owl-themed brown */
         margin-bottom: 20px;
     }
     
@@ -176,6 +199,12 @@ st.markdown("""
         overflow-y: auto;
         margin-bottom: 20px;
         padding-right: 10px;
+        -ms-overflow-style: none; /* for Internet Explorer, Edge */
+        scrollbar-width: none; /* for Firefox */
+    }
+    
+    .chat-container::-webkit-scrollbar {
+        display: none; /* for Chrome, Safari, and Opera */
     }
     
     /* Make chat input always visible */
@@ -185,6 +214,61 @@ st.markdown("""
         background-color: #f8f9fa;
         padding: 10px 0;
         z-index: 100;
+    }
+    
+    /* Quick prompt buttons container */
+    .quick-prompts {
+        display: flex;
+        overflow-x: auto;
+        padding: 10px 0;
+        gap: 10px;
+        scroll-snap-type: x mandatory;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    
+    .quick-prompts::-webkit-scrollbar {
+        display: none;
+    }
+    
+    /* Individual quick prompt button */
+    .prompt-pill {
+        background-color: #f0f0f0;
+        color: #333;
+        border-radius: 20px;
+        padding: 6px 12px;
+        font-size: 0.85rem;
+        white-space: nowrap;
+        cursor: pointer;
+        border: 1px solid #ddd;
+        scroll-snap-align: start;
+        transition: all 0.2s;
+    }
+    
+    .prompt-pill:hover {
+        background-color: #e0e0e0;
+        transform: translateY(-1px);
+    }
+    
+    /* Owl-themed elements */
+    .owl-icon {
+        color: #8B5D33;
+        font-size: 1.5rem;
+        margin-right: 10px;
+    }
+    
+    /* Owl-themed avatar for chat */
+    .owl-avatar {
+        background-color: #FFF8E8;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #8B5D33;
+        font-weight: bold;
+        margin-right: 10px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -297,7 +381,7 @@ if not st.session_state.authenticated:
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         st.markdown('<div class="logo-pulse">', unsafe_allow_html=True)
-        st.markdown("<h1 style='text-align: center;'>🧳 Bangkok Travel Bro</h1>", unsafe_allow_html=True)
+        st.markdown("<h1 style='text-align: center;'>🦉 Bangkok Travel Owl</h1>", unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
         
         st.markdown("<div style='height: 30px;'></div>", unsafe_allow_html=True)
@@ -306,7 +390,7 @@ if not st.session_state.authenticated:
         st.markdown("""
         <div class="custom-card">
             <h3>Welcome Explorer!</h3>
-            <p>Sign in to discover Bangkok's hidden gems, get personalized recommendations, and plan your perfect trip.</p>
+            <p>Sign in to discover Bangkok's hidden gems, get personalized recommendations, and plan your perfect trip with your wise travel companion.</p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -327,7 +411,7 @@ if not st.session_state.authenticated:
         if authenticate(email, password):
             st.session_state.authenticated = True
             st.session_state.email = email
-            st.success("Welcome back! Let's explore Bangkok together 🎉")
+            st.success("Welcome back! Let your wise Owl guide you through Bangkok 🦉")
             st.rerun()
         else:
             st.error("Incorrect email or password 🔐")
@@ -341,7 +425,7 @@ else:
     # Header area with dynamic greeting
     col_header1, col_header2 = st.columns([3, 1])
     with col_header1:
-        st.markdown(f"<h1>🧳 Bangkok Travel Bro</h1>", unsafe_allow_html=True)
+        st.markdown(f"<h1>🦉 Bangkok Travel Owl</h1>", unsafe_allow_html=True)
         st.markdown(f"<h4>{greet_user()}</h4>", unsafe_allow_html=True)
     
     with col_header2:
@@ -368,7 +452,7 @@ else:
         st.markdown("""
         <div class="custom-card">
             <h3>✈️ Tell us about your trip</h3>
-            <p>Help us personalize your Bangkok experience</p>
+            <p>Help Owl personalize your Bangkok experience</p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -402,34 +486,71 @@ else:
 
     # Chat Interface
     if "user_context" in st.session_state:
-        colored_header("Let's Plan Your Bangkok Adventure", "Ask me anything about Bangkok, from food to sights!")
+        colored_header("Your Wise Travel Owl", "Ask me anything about Bangkok, from food to sights!")
 
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
+        
+        if "current_chat" not in st.session_state:
+            st.session_state.current_chat = []
 
         # Two separate tabs - Chat interface and previous conversations
-        chat_tab, history_tab = st.tabs(["💬 Chat", "📜 Previous Conversations"])
+        chat_tab, history_tab = st.tabs(["💬 Chat with Owl", "📜 Previous Conversations"])
         
         with chat_tab:
-            # Quick prompt buttons for better user experience
-            prompt_col1, prompt_col2, prompt_col3 = st.columns(3)
-            with prompt_col1:
-                if st.button("🍜 Food recommendations", use_container_width=True):
-                    st.session_state.quick_prompt = "What are the best Thai dishes I should try in Bangkok?"
-            with prompt_col2:
-                if st.button("🏯 Top attractions", use_container_width=True):
-                    st.session_state.quick_prompt = "What are the must-visit attractions in Bangkok?"
-            with prompt_col3:
-                if st.button("🛍️ Shopping spots", use_container_width=True):
-                    st.session_state.quick_prompt = "Where are the best places to shop in Bangkok?"
+            # Horizontally scrollable quick prompt buttons
+            st.markdown("""
+            <div class="quick-prompts">
+                <div class="prompt-pill" onclick="document.getElementById('quick-prompt-food').click()">🍜 Food recommendations</div>
+                <div class="prompt-pill" onclick="document.getElementById('quick-prompt-attractions').click()">🏯 Top attractions</div>
+                <div class="prompt-pill" onclick="document.getElementById('quick-prompt-shopping').click()">🛍️ Shopping spots</div>
+                <div class="prompt-pill" onclick="document.getElementById('quick-prompt-safety').click()">🛡️ Safety tips</div>
+                <div class="prompt-pill" onclick="document.getElementById('quick-prompt-transport').click()">🚕 Transportation</div>
+                <div class="prompt-pill" onclick="document.getElementById('quick-prompt-budget').click()">💰 Budget tips</div>
+            </div>
+            """, unsafe_allow_html=True)
             
-            # Display chat history
-            for chat in st.session_state.chat_history:
-                st.chat_message("user").markdown(chat['user'])
-                
-                # Clean and display assistant response
-                cleaned_response = clean_response(chat['assistant'])
-                st.chat_message("assistant").markdown(cleaned_response, unsafe_allow_html=True)
+            # Hidden buttons to handle the onclick events
+            col_hidden = st.columns(6)
+            with col_hidden[0]:
+                food_btn = st.button("Food", key="quick-prompt-food", visible=False)
+            with col_hidden[1]:
+                attractions_btn = st.button("Attractions", key="quick-prompt-attractions", visible=False)
+            with col_hidden[2]:
+                shopping_btn = st.button("Shopping", key="quick-prompt-shopping", visible=False)
+            with col_hidden[3]:
+                safety_btn = st.button("Safety", key="quick-prompt-safety", visible=False)
+            with col_hidden[4]:
+                transport_btn = st.button("Transport", key="quick-prompt-transport", visible=False)
+            with col_hidden[5]:
+                budget_btn = st.button("Budget", key="quick-prompt-budget", visible=False)
+            
+            # Handle quick prompt button clicks
+            if food_btn:
+                st.session_state.quick_prompt = "What are the best Thai dishes I should try in Bangkok?"
+            elif attractions_btn:
+                st.session_state.quick_prompt = "What are the must-visit attractions in Bangkok?"
+            elif shopping_btn:
+                st.session_state.quick_prompt = "Where are the best places to shop in Bangkok?"
+            elif safety_btn:
+                st.session_state.quick_prompt = "What are important safety tips for Bangkok?"
+            elif transport_btn:
+                st.session_state.quick_prompt = "How do I get around Bangkok easily?"
+            elif budget_btn:
+                st.session_state.quick_prompt = "How can I travel Bangkok on a budget?"
+            
+            # Display only the current chat session
+            st.markdown('<div class="chat-container">', unsafe_allow_html=True)
+            if st.session_state.current_chat:
+                for chat in st.session_state.current_chat:
+                    st.chat_message("user").markdown(chat['user'])
+                    
+                    # Custom owl avatar for the assistant
+                    with st.chat_message("assistant", avatar="🦉"):
+                        # Clean and display assistant response
+                        cleaned_response = clean_response(chat['assistant'])
+                        st.markdown(cleaned_response, unsafe_allow_html=True)
+            st.markdown('</div>', unsafe_allow_html=True)
             
             # Chat input - ensure it's always visible
             st.markdown('<div id="chat-input-anchor"></div>', unsafe_allow_html=True)
@@ -444,7 +565,7 @@ else:
                     st.session_state.process_input = user_input
                     st.rerun()
             else:
-                user_input = st.chat_input("Ask anything about Bangkok...", key="user_chat_input")
+                user_input = st.chat_input("Ask Owl anything about Bangkok...", key="user_chat_input")
         
         # Previous conversations tab
         with history_tab:
@@ -453,7 +574,12 @@ else:
                     with st.expander(f"Chat {i}: {chat['user'][:40]}{'...' if len(chat['user']) > 40 else ''}", expanded=False):
                         st.markdown(f"**You:** {chat['user']}")
                         cleaned_response = clean_response(chat['assistant'])
-                        st.markdown(f"**Bro:** {cleaned_response}", unsafe_allow_html=True)
+                        st.markdown(f"**Owl:** {cleaned_response}", unsafe_allow_html=True)
+                
+                # Button to start a new chat
+                if st.button("Start New Chat", key="new_chat_btn"):
+                    st.session_state.current_chat = []
+                    st.rerun()
             else:
                 st.info("No previous conversations yet")
 
@@ -473,7 +599,7 @@ else:
                 for category, items in data.items():
                     for item in items[:limit_per_category]:
                         all_items.append(
-                            f"- {item.get('name', 'Unnamed')} ({item.get('type', 'Unknown').title()}), "
+                            f"- {item.get('name', 'Unnamed')} ({item.get('type', 'Unknown').Title()}), "
                             f"{item.get('location', 'Unknown')}, Price: {item.get('price', item.get('price_per_night', 'N/A'))}, "
                             f"Rating: {item.get('rating', 'N/A')}, Tags: {', '.join(item.get('tags', []))}"
                         )
@@ -481,9 +607,10 @@ else:
 
             data_snippet = format_data_snippet(local_data)
 
+            # Get only the most recent messages from current chat
             past_chat = ""
-            for chat in st.session_state.chat_history[-6:]:
-                past_chat += f"User: {chat['user']}\nAI Bro: {chat['assistant']}\n"
+            for chat in st.session_state.current_chat[-3:]:  # Limit context to last 3 messages
+                past_chat += f"User: {chat['user']}\nAI Owl: {chat['assistant']}\n"
 
             location_info = ""
             if st.session_state.location:
@@ -493,7 +620,7 @@ else:
                 location_info = "User current location: Not detected yet.\n"
 
             prompt = f"""
-You're a helpful and chill AI travel bro for someone visiting Bangkok.
+You're a helpful and wise AI travel Owl for someone visiting Bangkok.
 If it's appropriate, show a brief intro paragraph followed by a list of recommendations.
 
 IMPORTANT: I need you to format recommendations as HTML cards using this exact structure:
@@ -526,17 +653,20 @@ Chat so far:
 
 User: {process_input}
 
-Respond in {context['language']}. Be smart, friendly, casual. Keep the flow.
+Respond in {context['language']}. Be wise, helpful, friendly. Keep the flow natural.
+Always sign your responses with a small owl emoticon 🦉
 """
-            with st.spinner("Finding the best spots for you... 🌟"):
+            with st.spinner("Owl is finding wisdom for you... 🦉"):
                 response = model.generate_content(prompt)
                 reply = response.text
 
-            # Record the chat history but don't display yet - will show on next reload
-            st.session_state.chat_history.append({
+            # Add to both current chat and full history
+            new_chat = {
                 "user": process_input,
                 "assistant": reply
-            })
+            }
+            st.session_state.current_chat.append(new_chat)
+            st.session_state.chat_history.append(new_chat)
 
             save_convo(st.session_state.email, st.session_state.chat_history)
             st.toast("Saved to your travel journal ✅")
