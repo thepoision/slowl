@@ -231,23 +231,22 @@ st.markdown("""
         display: none;
     }
     
-    /* Individual quick prompt button */
-    .prompt-pill {
+    /* Prompt button styles */
+    .prompt-button {
         background-color: #f0f0f0;
         color: #333;
         border-radius: 20px;
+        border: 1px solid #ddd;
         padding: 6px 12px;
         font-size: 0.85rem;
-        white-space: nowrap;
         cursor: pointer;
-        border: 1px solid #ddd;
-        scroll-snap-align: start;
         transition: all 0.2s;
+        white-space: nowrap;
+        text-align: center;
     }
     
-    .prompt-pill:hover {
+    .prompt-button:hover {
         background-color: #e0e0e0;
-        transform: translateY(-1px);
     }
     
     /* Owl-themed elements */
@@ -498,46 +497,32 @@ else:
         chat_tab, history_tab = st.tabs(["💬 Chat with Owl", "📜 Previous Conversations"])
         
         with chat_tab:
-            # Horizontally scrollable quick prompt buttons
-            st.markdown("""
-            <div class="quick-prompts">
-                <div class="prompt-pill" onclick="document.getElementById('quick-prompt-food').click()">🍜 Food recommendations</div>
-                <div class="prompt-pill" onclick="document.getElementById('quick-prompt-attractions').click()">🏯 Top attractions</div>
-                <div class="prompt-pill" onclick="document.getElementById('quick-prompt-shopping').click()">🛍️ Shopping spots</div>
-                <div class="prompt-pill" onclick="document.getElementById('quick-prompt-safety').click()">🛡️ Safety tips</div>
-                <div class="prompt-pill" onclick="document.getElementById('quick-prompt-transport').click()">🚕 Transportation</div>
-                <div class="prompt-pill" onclick="document.getElementById('quick-prompt-budget').click()">💰 Budget tips</div>
-            </div>
-            """, unsafe_allow_html=True)
+            # Quick prompt buttons - fixed implementation using regular buttons in columns
+            st.write("**Quick Questions:**")
             
-            # Hidden buttons to handle the onclick events
-            col_hidden = st.columns(6)
-            with col_hidden[0]:
-                food_btn = st.button("Food", key="quick-prompt-food", visible=False)
-            with col_hidden[1]:
-                attractions_btn = st.button("Attractions", key="quick-prompt-attractions", visible=False)
-            with col_hidden[2]:
-                shopping_btn = st.button("Shopping", key="quick-prompt-shopping", visible=False)
-            with col_hidden[3]:
-                safety_btn = st.button("Safety", key="quick-prompt-safety", visible=False)
-            with col_hidden[4]:
-                transport_btn = st.button("Transport", key="quick-prompt-transport", visible=False)
-            with col_hidden[5]:
-                budget_btn = st.button("Budget", key="quick-prompt-budget", visible=False)
+            # First row of quick prompts
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                if st.button("🍜 Food recommendations", key="food_btn", use_container_width=True):
+                    st.session_state.quick_prompt = "What are the best Thai dishes I should try in Bangkok?"
+            with col2:
+                if st.button("🏯 Top attractions", key="attractions_btn", use_container_width=True):
+                    st.session_state.quick_prompt = "What are the must-visit attractions in Bangkok?"
+            with col3:
+                if st.button("🛍️ Shopping spots", key="shopping_btn", use_container_width=True):
+                    st.session_state.quick_prompt = "Where are the best places to shop in Bangkok?"
             
-            # Handle quick prompt button clicks
-            if food_btn:
-                st.session_state.quick_prompt = "What are the best Thai dishes I should try in Bangkok?"
-            elif attractions_btn:
-                st.session_state.quick_prompt = "What are the must-visit attractions in Bangkok?"
-            elif shopping_btn:
-                st.session_state.quick_prompt = "Where are the best places to shop in Bangkok?"
-            elif safety_btn:
-                st.session_state.quick_prompt = "What are important safety tips for Bangkok?"
-            elif transport_btn:
-                st.session_state.quick_prompt = "How do I get around Bangkok easily?"
-            elif budget_btn:
-                st.session_state.quick_prompt = "How can I travel Bangkok on a budget?"
+            # Second row of quick prompts
+            col4, col5, col6 = st.columns(3)
+            with col4:
+                if st.button("🛡️ Safety tips", key="safety_btn", use_container_width=True):
+                    st.session_state.quick_prompt = "What are important safety tips for Bangkok?"
+            with col5:
+                if st.button("🚕 Transportation", key="transport_btn", use_container_width=True):
+                    st.session_state.quick_prompt = "How do I get around Bangkok easily?"
+            with col6:
+                if st.button("💰 Budget tips", key="budget_btn", use_container_width=True):
+                    st.session_state.quick_prompt = "How can I travel Bangkok on a budget?"
             
             # Display only the current chat session
             st.markdown('<div class="chat-container">', unsafe_allow_html=True)
@@ -599,7 +584,7 @@ else:
                 for category, items in data.items():
                     for item in items[:limit_per_category]:
                         all_items.append(
-                            f"- {item.get('name', 'Unnamed')} ({item.get('type', 'Unknown').Title()}), "
+                            f"- {item.get('name', 'Unnamed')} ({item.get('type', 'Unknown').title()}), "
                             f"{item.get('location', 'Unknown')}, Price: {item.get('price', item.get('price_per_night', 'N/A'))}, "
                             f"Rating: {item.get('rating', 'N/A')}, Tags: {', '.join(item.get('tags', []))}"
                         )
