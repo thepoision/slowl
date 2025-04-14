@@ -55,16 +55,13 @@ st.markdown("""
         .mobile-header h1 {
             margin: 0 !important;
         }
-        /* Compact quick buttons */
-        .quick-btn {
-            padding: 3px 6px !important;
+        /* Style for small buttons */
+        .small-btn button {
+            padding: 0.25rem 0.5rem !important;
             font-size: 0.7rem !important;
-            min-height: unset !important;
+            min-height: 0 !important;
             height: auto !important;
-        }
-        .compact-tabs button {
-            padding: 5px !important;
-            font-size: 0.8rem !important;
+            line-height: 1 !important;
         }
         /* Reduce form spacing */
         .stForm > div {
@@ -356,6 +353,22 @@ st.markdown("""
         margin-right: auto;
         border-bottom-left-radius: 0;
     }
+    
+    /* Quick button grid */
+    .quick-button-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+        margin-bottom: 10px;
+    }
+    
+    /* Apply small button styles */
+    .small-button-container button {
+        font-size: 0.75rem !important;
+        padding: 0.25rem !important;
+        min-height: 0 !important;
+        height: auto !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -508,20 +521,13 @@ if not st.session_state.authenticated:
 
 # --- Main App After Login ---
 else:
-    # Compact header area
-    st.markdown("""
-    <div class="mobile-header">
-        <div>
-            <h1>🦉 Bangkok Travel Owl</h1>
-            <h4>""" + greet_user() + """</h4>
-        </div>
-        <div id="logout-btn"></div>
-    </div>
-    """, unsafe_allow_html=True)
+    # Compact header area with columns
+    col1, col2 = st.columns([5, 1])
+    with col1:
+        st.markdown(f"<h1>🦉 Bangkok Travel Owl</h1>", unsafe_allow_html=True)
+        st.markdown(f"<h4>{greet_user()}</h4>", unsafe_allow_html=True)
     
-    # Place the logout button in the designated div
-    logout_placeholder = st.empty()
-    with logout_placeholder:
+    with col2:
         if st.button("🚪", key="logout_btn"):
             st.session_state.authenticated = False
             st.rerun()
@@ -590,30 +596,41 @@ else:
             st.session_state.current_chat = []
 
         # Tabs with minimal styling
-        st.markdown('<div class="compact-tabs">', unsafe_allow_html=True)
         chat_tab, history_tab = st.tabs(["💬 Chat", "📜 History"])
-        st.markdown('</div>', unsafe_allow_html=True)
         
         with chat_tab:
-            # Quick prompt buttons in a scrollable row
-            st.markdown('<div class="quick-prompts">', unsafe_allow_html=True)
+            # Quick prompt buttons in a grid layout
+            st.markdown('<div class="quick-button-grid">', unsafe_allow_html=True)
             
-            # Create a horizontal scrollable container for the quick buttons
+            # Define the quick prompts
             quick_prompts = [
                 ("🍜 Food", "What are the best Thai dishes I should try in Bangkok?"),
                 ("🏯 Sights", "What are the must-visit attractions in Bangkok?"),
-                ("🛍️ Shopping", "Where are the best places to shop in Bangkok?"),
+                ("🛍️ Shop", "Where are the best places to shop in Bangkok?"),
                 ("🛡️ Safety", "What are important safety tips for Bangkok?"),
-                ("🚕 Transport", "How do I get around Bangkok easily?"),
+                ("🚕 Travel", "How do I get around Bangkok easily?"),
                 ("💰 Budget", "How can I travel Bangkok on a budget?")
             ]
             
-            cols = st.columns(len(quick_prompts))
-            for i, (label, prompt) in enumerate(quick_prompts):
-                with cols[i]:
-                    if st.button(label, key=f"{label.lower()}_btn", use_container_width=True, 
-                              help=prompt, type="primary", class_name="quick-btn"):
-                        st.session_state.quick_prompt = prompt
+            # Create a 3x2 grid for quick buttons using columns
+            row1_cols = st.columns(3)
+            row2_cols = st.columns(3)
+            
+            # First row
+            for i in range(3):
+                with row1_cols[i]:
+                    st.markdown('<div class="small-button-container">', unsafe_allow_html=True)
+                    if st.button(quick_prompts[i][0], key=f"btn_{i}", use_container_width=True, help=quick_prompts[i][1]):
+                        st.session_state.quick_prompt = quick_prompts[i][1]
+                    st.markdown('</div>', unsafe_allow_html=True)
+            
+            # Second row
+            for i in range(3):
+                with row2_cols[i]:
+                    st.markdown('<div class="small-button-container">', unsafe_allow_html=True)
+                    if st.button(quick_prompts[i+3][0], key=f"btn_{i+3}", use_container_width=True, help=quick_prompts[i+3][1]):
+                        st.session_state.quick_prompt = quick_prompts[i+3][1]
+                    st.markdown('</div>', unsafe_allow_html=True)
             
             st.markdown('</div>', unsafe_allow_html=True)
             
@@ -803,8 +820,4 @@ Always sign your responses with a small owl emoticon 🦉
             st.session_state.current_chat.append(new_chat)
             st.session_state.chat_history.append(new_chat)
 
-            save_convo(st.session_state.email, st.session_state.chat_history)
-            st.toast("Saved ✅")
-            
-            # Force reload to display the new chat
-            st.rerun()
+            save_convo(st.session
