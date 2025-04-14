@@ -820,4 +820,8 @@ Always sign your responses with a small owl emoticon 🦉
             st.session_state.current_chat.append(new_chat)
             st.session_state.chat_history.append(new_chat)
 
-            save_convo(st.session
+            save_convo(st.session_state.email, st.session_state.chat_history)
+            st.toast("Saved ✅")
+            
+            # Force reload to display the new chat
+            st.rerun()
