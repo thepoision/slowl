@@ -1,0 +1,655 @@
+[
+  {
+    "id": "01234567-89ab-cdef-0123-456789abcdef",
+    "title": "Bangkok Highlights - 3 Days",
+    "description": "A short but comprehensive tour of Bangkok's most famous attractions",
+    "duration": 3,
+    "budget_category": "medium",
+    "budget_amount": 5000,
+    "suitable_for": ["solo", "couples", "friends"],
+    "days": [
+      {
+        "day": 1,
+        "title": "Historic Bangkok",
+        "activities": [
+          {
+            "time": "09:00",
+            "activity": "Grand Palace & Wat Phra Kaew",
+            "description": "Visit Thailand's most sacred temple complex and former royal residence",
+            "location": "Na Phra Lan Rd, Phra Borom Maha Ratchawang",
+            "duration": "3 hours",
+            "cost": 500
+          },
+          {
+            "time": "12:30",
+            "activity": "Lunch at Thipsamai",
+            "description": "Famous for traditional Pad Thai",
+            "location": "313 Maha Chai Rd",
+            "duration": "1 hour",
+            "cost": 200
+          },
+          {
+            "time": "14:00",
+            "activity": "Wat Pho",
+            "description": "Temple of the Reclining Buddha",
+            "location": "2 Sanam Chai Rd",
+            "duration": "1.5 hours",
+            "cost": 200
+          },
+          {
+            "time": "16:00",
+            "activity": "Wat Arun",
+            "description": "Temple of Dawn across the river",
+            "location": "158 Thanon Wang Doem",
+            "duration": "1 hour",
+            "cost": 100
+          },
+          {
+            "time": "18:00",
+            "activity": "Dinner cruise on Chao Phraya River",
+            "description": "Enjoy Thai cuisine while seeing Bangkok from the water",
+            "location": "River City Pier",
+            "duration": "2 hours",
+            "cost": 1000
+          }
+        ]
+      },
+      {
+        "day": 2,
+        "title": "Modern Bangkok",
+        "activities": [
+          {
+            "time": "10:00",
+            "activity": "Shopping at Siam Paragon",
+            "description": "Upscale shopping mall",
+            "location": "Rama I Rd",
+            "duration": "2 hours",
+            "cost": 0
+          },
+          {
+            "time": "12:30",
+            "activity": "Lunch at Som Tam Nua",
+            "description": "Spicy Isaan food",
+            "location": "Siam Square Soi 5",
+            "duration": "1 hour",
+            "cost": 300
+          },
+          {
+            "time": "14:00",
+            "activity": "Jim Thompson House",
+            "description": "Traditional Thai house with art collection",
+            "location": "6 Soi Kasemsan 2",
+            "duration": "1.5 hours",
+            "cost": 200
+          },
+          {
+            "time": "16:00",
+            "activity": "MBK Center",
+            "description": "Shopping for electronics and souvenirs",
+            "location": "444 Phayathai Rd",
+            "duration": "2 hours",
+            "cost": 0
+          },
+          {
+            "time": "19:00",
+            "activity": "Dinner and drinks at Asiatique",
+            "description": "Riverside night market and entertainment venue",
+            "location": "2194 Charoen Krung Rd",
+            "duration": "3 hours",
+            "cost": 800
+          }
+        ]
+      },
+      {
+        "day": 3,
+        "title": "Local Experience",
+        "activities": [
+          {
+            "time": "08:00",
+            "activity": "Floating Market Tour",
+            "description": "Visit Damnoen Saduak floating market",
+            "location": "100 km southwest of Bangkok",
+            "duration": "5 hours",
+            "cost": 1000
+          },
+          {
+            "time": "14:00",
+            "activity": "Chatuchak Weekend Market",
+            "description": "Huge weekend market with everything imaginable",
+            "location": "Kamphaeng Phet 2 Rd",
+            "duration": "3 hours",
+            "cost": 0
+          },
+          {
+            "time": "18:00",
+            "activity": "Street food tour in Chinatown",
+            "description": "Sample the best of Thai street food",
+            "location": "Yaowarat Rd",
+            "duration": "2 hours",
+            "cost": 500
+          }
+        ]
+      }
+    ],
+    "tags": ["temples", "shopping", "food", "cruise", "markets"],
+    "created_at": "2025-04-15T12:00:00.000Z"
+  },
+  {
+    "id": "12345678-89ab-cdef-0123-456789abcdef",
+    "title": "Bangkok on a Budget - 4 Days",
+    "description": "Explore Bangkok's highlights while keeping costs low",
+    "duration": 4,
+    "budget_category": "low",
+    "budget_amount": 3000,
+    "suitable_for": ["solo", "backpackers", "students"],
+    "days": [
+      {
+        "day": 1,
+        "title": "Temple Day",
+        "activities": [
+          {
+            "time": "09:00",
+            "activity": "Wat Pho",
+            "description": "Temple of the Reclining Buddha",
+            "location": "2 Sanam Chai Rd",
+            "duration": "1.5 hours",
+            "cost": 200
+          },
+          {
+            "time": "11:00",
+            "activity": "Lunch at local food stall",
+            "description": "Try local street food",
+            "location": "Around Wat Pho",
+            "duration": "1 hour",
+            "cost": 80
+          },
+          {
+            "time": "13:00",
+            "activity": "Wat Arun",
+            "description": "Temple of Dawn",
+            "location": "158 Thanon Wang Doem",
+            "duration": "1 hour",
+            "cost": 100
+          },
+          {
+            "time": "15:00",
+            "activity": "Free Museum Day",
+            "description": "National Museum (free on certain days)",
+            "location": "Na Phra That Rd",
+            "duration": "2 hours",
+            "cost": 0
+          },
+          {
+            "time": "18:00",
+            "activity": "Dinner at Or Tor Kor Market",
+            "description": "High-quality food market with reasonable prices",
+            "location": "Kamphaengphet Rd",
+            "duration": "1 hour",
+            "cost": 150
+          }
+        ]
+      },
+      {
+        "day": 2,
+        "title": "Local Markets",
+        "activities": [
+          {
+            "time": "08:00",
+            "activity": "Breakfast at hostel/hotel",
+            "description": "Save money by eating included breakfast",
+            "location": "Accommodation",
+            "duration": "30 mins",
+            "cost": 0
+          },
+          {
+            "time": "09:00",
+            "activity": "Chatuchak Weekend Market",
+            "description": "Huge weekend market",
+            "location": "Kamphaeng Phet 2 Rd",
+            "duration": "4 hours",
+            "cost": 0
+          },
+          {
+            "time": "13:00",
+            "activity": "Lunch at Chatuchak",
+            "description": "Food vendors in the market",
+            "location": "Chatuchak Market",
+            "duration": "1 hour",
+            "cost": 120
+          },
+          {
+            "time": "15:00",
+            "activity": "Free park visit",
+            "description": "Relax at Lumpini Park",
+            "location": "Rama IV Rd",
+            "duration": "2 hours",
+            "cost": 0
+          },
+          {
+            "time": "18:00",
+            "activity": "Street food dinner",
+            "description": "Try various street food options",
+            "location": "Victory Monument",
+            "duration": "1 hour",
+            "cost": 100
+          }
+        ]
+      },
+      {
+        "day": 3,
+        "title": "Cultural Day",
+        "activities": [
+          {
+            "time": "09:00",
+            "activity": "Free Art Gallery",
+            "description": "Bangkok Art and Culture Centre",
+            "location": "939 Rama I Rd",
+            "duration": "2 hours",
+            "cost": 0
+          },
+          {
+            "time": "12:00",
+            "activity": "Lunch at food court",
+            "description": "MBK Food Court - cheap and varied options",
+            "location": "MBK Center",
+            "duration": "1 hour",
+            "cost": 120
+          },
+          {
+            "time": "14:00",
+            "activity": "Walking tour of Chinatown",
+            "description": "Self-guided tour of Yaowarat",
+            "location": "Yaowarat Rd",
+            "duration": "3 hours",
+            "cost": 0
+          },
+          {
+            "time": "18:00",
+            "activity": "Chinatown street food",
+            "description": "Famous street food area",
+            "location": "Yaowarat Rd",
+            "duration": "2 hours",
+            "cost": 200
+          }
+        ]
+      },
+      {
+        "day": 4,
+        "title": "Off the Beaten Path",
+        "activities": [
+          {
+            "time": "07:00",
+            "activity": "Local breakfast",
+            "description": "Try Jok (rice porridge) at a local shop",
+            "location": "Local neighborhood",
+            "duration": "1 hour",
+            "cost": 60
+          },
+          {
+            "time": "08:30",
+            "activity": "Explore Thonburi",
+            "description": "Less visited side of the river",
+            "location": "Take the ferry across",
+            "duration": "3 hours",
+            "cost": 20
+          },
+          {
+            "time": "12:00",
+            "activity": "Lunch at local restaurant",
+            "description": "Non-touristy local food",
+            "location": "Thonburi area",
+            "duration": "1 hour",
+            "cost": 100
+          },
+          {
+            "time": "14:00",
+            "activity": "Visit Wat Pak Nam",
+            "description": "Less visited temple with beautiful murals",
+            "location": "Pak Nam",
+            "duration": "1.5 hours",
+            "cost": 0
+          },
+          {
+            "time": "17:00",
+            "activity": "Sunset at Golden Mount",
+            "description": "Panoramic views of Bangkok",
+            "location": "Wat Saket",
+            "duration": "1 hour",
+            "cost": 50
+          },
+          {
+            "time": "19:00",
+            "activity": "Farewell dinner at Raan Jay Fai",
+            "description": "Famous street food (splurge)",
+            "location": "327 Maha Chai Rd",
+            "duration": "2 hours",
+            "cost": 500
+          }
+        ]
+      }
+    ],
+    "tags": ["budget", "temples", "markets", "street food", "local experience"],
+    "created_at": "2025-04-15T12:00:00.000Z"
+  },
+  {
+    "id": "23456789-89ab-cdef-0123-456789abcdef",
+    "title": "Luxury Bangkok Experience - 2 Days",
+    "description": "Experience Bangkok's finest luxury offerings",
+    "duration": 2,
+    "budget_category": "high",
+    "budget_amount": 15000,
+    "suitable_for": ["couples", "luxury travelers"],
+    "days": [
+      {
+        "day": 1,
+        "title": "Luxury Sightseeing",
+        "activities": [
+          {
+            "time": "08:00",
+            "activity": "Breakfast at hotel",
+            "description": "Gourmet breakfast at 5-star hotel",
+            "location": "Hotel restaurant",
+            "duration": "1 hour",
+            "cost": 800
+          },
+          {
+            "time": "09:30",
+            "activity": "Private Grand Palace Tour",
+            "description": "Private guided tour with expert historian",
+            "location": "Grand Palace",
+            "duration": "3 hours",
+            "cost": 3000
+          },
+          {
+            "time": "13:00",
+            "activity": "Lunch at Sala Rim Naam",
+            "description": "Fine Thai dining at Mandarin Oriental",
+            "location": "Mandarin Oriental Hotel",
+            "duration": "2 hours",
+            "cost": 2000
+          },
+          {
+            "time": "15:30",
+            "activity": "Thai spa treatment",
+            "description": "Premium spa package at Divana Spa",
+            "location": "Sukhumvit area",
+            "duration": "3 hours",
+            "cost": 3500
+          },
+          {
+            "time": "19:30",
+            "activity": "Rooftop dinner",
+            "description": "Fine dining at Sirocco or Vertigo",
+            "location": "State Tower or Banyan Tree",
+            "duration": "3 hours",
+            "cost": 4000
+          }
+        ]
+      },
+      {
+        "day": 2,
+        "title": "Exclusive Experiences",
+        "activities": [
+          {
+            "time": "09:00",
+            "activity": "Private longtail boat tour",
+            "description": "Explore Bangkok's canals in style",
+            "location": "Hotel pier",
+            "duration": "3 hours",
+            "cost": 2500
+          },
+          {
+            "time": "12:30",
+            "activity": "Lunch at Blue Elephant",
+            "description": "Royal Thai cuisine in colonial mansion",
+            "location": "233 Sathorn Tai Rd",
+            "duration": "2 hours",
+            "cost": 1800
+          },
+          {
+            "time": "15:00",
+            "activity": "Private shopping experience",
+            "description": "Personal shopping assistant at Emquartier",
+            "location": "Sukhumvit Rd",
+            "duration": "2 hours",
+            "cost": 0
+          },
+          {
+            "time": "18:00",
+            "activity": "Cocktails at Bamboo Bar",
+            "description": "Award-winning cocktails with live jazz",
+            "location": "Mandarin Oriental",
+            "duration": "1 hour",
+            "cost": 1000
+          },
+          {
+            "time": "20:00",
+            "activity": "Michelin-starred dinner",
+            "description": "Tasting menu at Gaggan Anand or Le Normandie",
+            "location": "Various locations",
+            "duration": "3 hours",
+            "cost": 5000
+          }
+        ]
+      }
+    ],
+    "tags": ["luxury", "fine dining", "private tours", "spa", "rooftop"],
+    "created_at": "2025-04-15T12:00:00.000Z"
+  },
+  {
+    "id": "34567890-89ab-cdef-0123-456789abcdef",
+    "title": "Family Fun in Bangkok - 3 Days",
+    "description": "Family-friendly itinerary with activities for all ages",
+    "duration": 3,
+    "budget_category": "medium",
+    "budget_amount": 7000,
+    "suitable_for": ["families", "children"],
+    "days": [
+      {
+        "day": 1,
+        "title": "Educational Fun",
+        "activities": [
+          {
+            "time": "09:00",
+            "activity": "SEA LIFE Bangkok",
+            "description": "Underwater world with touch pools and tunnel aquarium",
+            "location": "Siam Paragon",
+            "duration": "2 hours",
+            "cost": 1000
+          },
+          {
+            "time": "12:00",
+            "activity": "Lunch at Food Republic",
+            "description": "Food court with options for everyone",
+            "location": "Siam Center",
+            "duration": "1 hour",
+            "cost": 600
+          },
+          {
+            "time": "14:00",
+            "activity": "Art in Paradise",
+            "description": "3D art museum with interactive exhibits",
+            "location": "Ratchadapisek Rd",
+            "duration": "2 hours",
+            "cost": 800
+          },
+          {
+            "time": "17:00",
+            "activity": "Dinner and desserts at Chocolate Ville",
+            "description": "Themed outdoor restaurant with European village setting",
+            "location": "Kaset-Nawamin Road",
+            "duration": "2 hours",
+            "cost": 1000
+          }
+        ]
+      },
+      {
+        "day": 2,
+        "title": "Nature and Animals",
+        "activities": [
+          {
+            "time": "09:00",
+            "activity": "Safari World",
+            "description": "Drive-through safari and marine park",
+            "location": "Ramindra Road",
+            "duration": "5 hours",
+            "cost": 1500
+          },
+          {
+            "time": "15:00",
+            "activity": "Lumpini Park",
+            "description": "Paddle boats and playground in Bangkok's largest park",
+            "location": "Rama IV Road",
+            "duration": "2 hours",
+            "cost": 200
+          },
+          {
+            "time": "18:00",
+            "activity": "Dinner at Terminal 21 food court",
+            "description": "Affordable meal options in airport-themed mall",
+            "location": "Sukhumvit Road",
+            "duration": "1 hour",
+            "cost": 500
+          }
+        ]
+      },
+      {
+        "day": 3,
+        "title": "Water Fun",
+        "activities": [
+          {
+            "time": "10:00",
+            "activity": "Pororo Water Park",
+            "description": "Children's water park with slides and pools",
+            "location": "Central Plaza Bangna",
+            "duration": "3 hours",
+            "cost": 1200
+          },
+          {
+            "time": "14:00",
+            "activity": "Snow Town",
+            "description": "Indoor snow play area in tropical Bangkok",
+            "location": "Gateway Ekamai",
+            "duration": "2 hours",
+            "cost": 800
+          },
+          {
+            "time": "17:00",
+            "activity": "Dinner cruise on Chao Phraya",
+            "description": "Family-friendly dinner cruise with entertainment",
+            "location": "River City Pier",
+            "duration": "2 hours",
+            "cost": 1200
+          }
+        ]
+      }
+    ],
+    "tags": ["family", "children", "attractions", "fun", "educational"],
+    "created_at": "2025-04-15T12:00:00.000Z"
+  },
+  {
+    "id": "45678901-89ab-cdef-0123-456789abcdef",
+    "title": "Bangkok for Foodies - 2 Days",
+    "description": "Culinary journey through Bangkok's best eats",
+    "duration": 2,
+    "budget_category": "medium",
+    "budget_amount": 4000,
+    "suitable_for": ["foodies", "couples", "solo"],
+    "days": [
+      {
+        "day": 1,
+        "title": "Street Food Safari",
+        "activities": [
+          {
+            "time": "08:00",
+            "activity": "Traditional breakfast at On Lok Yun",
+            "description": "Vintage breakfast joint with Thai and Western options",
+            "location": "72 Charoen Krung Road",
+            "duration": "1 hour",
+            "cost": 150
+          },
+          {
+            "time": "10:00",
+            "activity": "Nang Loeng Market",
+            "description": "Historic food market with rare Thai desserts",
+            "location": "Nakhon Sawan Rd",
+            "duration": "2 hours",
+            "cost": 200
+          },
+          {
+            "time": "13:00",
+            "activity": "Lunch at Thipsamai",
+            "description": "Bangkok's famous Pad Thai restaurant",
+            "location": "313 Maha Chai Road",
+            "duration": "1 hour",
+            "cost": 200
+          },
+          {
+            "time": "15:00",
+            "activity": "Thai Cooking Class",
+            "description": "Learn to cook authentic Thai dishes",
+            "location": "Silom area",
+            "duration": "3 hours",
+            "cost": 1000
+          },
+          {
+            "time": "19:00",
+            "activity": "Chinatown Food Crawl",
+            "description": "Sample the best street food in Yaowarat",
+            "location": "Yaowarat Road",
+            "duration": "3 hours",
+            "cost": 500
+          }
+        ]
+      },
+      {
+        "day": 2,
+        "title": "Markets and Fine Dining",
+        "activities": [
+          {
+            "time": "08:00",
+            "activity": "Coffee tasting tour",
+            "description": "Visit Bangkok's best specialty coffee shops",
+            "location": "Various locations",
+            "duration": "2 hours",
+            "cost": 300
+          },
+          {
+            "time": "11:00",
+            "activity": "Or Tor Kor Market",
+            "description": "Premium fresh market with high-quality produce and food",
+            "location": "Kamphaengphet Road",
+            "duration": "2 hours",
+            "cost": 300
+          },
+          {
+            "time": "14:00",
+            "activity": "Thai dessert sampling",
+            "description": "Try traditional Thai sweets at Baanrai Yumm",
+            "location": "Sukhumvit 53",
+            "duration": "1 hour",
+            "cost": 200
+          },
+          {
+            "time": "16:00",
+            "activity": "Tea tasting",
+            "description": "Sample fine teas at double dogs tea room",
+            "location": "Sukhumvit area",
+            "duration": "1 hour",
+            "cost": 250
+          },
+          {
+            "time": "19:00",
+            "activity": "Fine dining experience",
+            "description": "Thai tasting menu at Nahm or Bo.lan",
+            "location": "Various locations",
+            "duration": "3 hours",
+            "cost": 1800
+          }
+        ]
+      }
+    ],
+    "tags": ["food", "cooking class", "markets", "street food", "fine dining"],
+    "created_at": "2025-04-15T12:00:00.000Z"
+  }
+]
