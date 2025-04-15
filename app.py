@@ -4,6 +4,8 @@ import os
 import json
 import datetime
 import re
+# Add ChromaDB imports
+from chroma_utils import initialize_chroma_collection, query_similar_itineraries
 
 # --- Page Configuration with owl theme ---
 st.set_page_config(
@@ -369,6 +371,45 @@ st.markdown("""
         min-height: 0 !important;
         height: auto !important;
     }
+    
+    /* Itinerary-specific styles */
+    .itinerary-card {
+        border-left: 3px solid #00796b; /* Teal accent for itineraries */
+    }
+    
+    .itinerary-highlights {
+        margin: 10px 0;
+        font-size: 0.9rem;
+    }
+    
+    .itinerary-highlight {
+        margin-bottom: 5px;
+        color: #555;
+    }
+    
+    .daily-plan {
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .daily-plan-title {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 5px;
+    }
+    
+    .time-slot {
+        display: flex;
+        margin-bottom: 5px;
+    }
+    
+    .time-label {
+        font-weight: 500;
+        width: 80px;
+        color: #00796b;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -391,6 +432,13 @@ def load_map_data():
         return json.load(f)
 
 map_data = load_map_data()
+
+# --- Initialize ChromaDB Collection ---
+@st.cache_resource
+def get_chroma_collection():
+    return initialize_chroma_collection()
+
+chroma_collection = get_chroma_collection()
 
 # --- User DB ---
 USER_DB_PATH = "users.json"
@@ -474,6 +522,35 @@ def clean_response(text):
         result = result[:start] + replacement + result[end:]
     
     return result
+
+# --- Format Itinerary Cards ---
+def format_itinerary_card(itinerary):
+    """Format an itinerary as an HTML card"""
+    title = itinerary.get("title", "Untitled Itinerary")
+    days = itinerary.get("days", "Flexible")
+    budget = itinerary.get("budget", "Unknown")
+    theme = itinerary.get("theme", "General")
+    highlights = itinerary.get("highlights", [])[:3]  # Get top 3 highlights
+    
+    highlights_html = ""
+    for highlight in highlights:
+        highlights_html += f'<div class="itinerary-highlight">• {highlight}</div>'
+    
+    return f"""
+    <div class="recommendation-card itinerary-card">
+        <div class="card-title">{title}</div>
+        <div class="card-meta">
+            <span class="location-badge">📅 {days} Days</span>
+            <span class="type-badge">{theme}</span>
+        </div>
+        <div class="itinerary-highlights">
+            {highlights_html}
+        </div>
+        <div class="card-footer">
+            <span class="price-tag">฿{budget} THB</span>
+        </div>
+    </div>
+    """
 
 # --- Login/Register Page ---
 if not st.session_state.authenticated:
@@ -596,7 +673,7 @@ else:
             st.session_state.current_chat = []
 
         # Tabs with minimal styling
-        chat_tab, history_tab = st.tabs(["💬 Chat", "📜 History"])
+        chat_tab, history_tab, itinerary_tab = st.tabs(["💬 Chat", "📜 History", "🗺️ Itineraries"])
         
         with chat_tab:
             # Quick prompt buttons in a grid layout
@@ -697,6 +774,97 @@ else:
                     st.rerun()
             else:
                 st.info("No previous conversations yet")
+        
+        # New Itineraries Tab
+        with itinerary_tab:
+            st.markdown('<div class="colored-header">', unsafe_allow_html=True)
+            st.markdown("### 🗺️ Thailand Itineraries")
+            st.markdown("Discover curated travel plans for Thailand")
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+            # Search itineraries
+            itinerary_query = st.text_input("Search itineraries by interests, duration, or budget", 
+                                           placeholder="e.g., beaches, temples, 5 days, budget")
+            
+            if itinerary_query:
+                with st.spinner("Finding perfect itineraries... 🦉"):
+                    # Query similar itineraries from ChromaDB
+                    similar_itineraries = query_similar_itineraries(chroma_collection, itinerary_query, n_results=3)
+                    
+                    if similar_itineraries:
+                        st.success(f"Found {len(similar_itineraries)} matching itineraries")
+                        for itinerary in similar_itineraries:
+                            # Display as card
+                            st.markdown(format_itinerary_card(itinerary), unsafe_allow_html=True)
+                            
+                            # Add a button to view full itinerary
+                            if st.button("View Full Details", key=f"view_{itinerary['id']}"):
+                                st.session_state.selected_itinerary = itinerary
+                                st.rerun()
+                    else:
+                        st.info("No matching itineraries found. Try different search terms.")
+            else:
+                # Display featured itineraries when no search is performed
+                st.markdown("#### Featured Itineraries")
+                # Get a few sample itineraries
+                featured_itineraries = query_similar_itineraries(chroma_collection, "popular bangkok", n_results=3)
+                
+                for itinerary in featured_itineraries:
+                    st.markdown(format_itinerary_card(itinerary), unsafe_allow_html=True)
+                    
+                    # Add a button to view details or add to chat
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        if st.button("View Details", key=f"view_{itinerary['id']}"):
+                            st.session_state.selected_itinerary = itinerary
+                            st.rerun()
+                    with col2:
+                        if st.button("Discuss in Chat", key=f"chat_{itinerary['id']}"):
+                            # Add a message to chat about this itinerary
+                            prompt = f"Tell me more about this {itinerary['title']} itinerary. What should I know about it?"
+                            st.session_state.quick_prompt = prompt
+                            st.switch_page("chat_tab")
+                            st.rerun()
+            
+            # Display selected itinerary details if any
+            if "selected_itinerary" in st.session_state:
+                itinerary = st.session_state.selected_itinerary
+                
+                st.markdown("<hr class='section-divider'>", unsafe_allow_html=True)
+                st.markdown(f"## {itinerary['title']}")
+                
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.markdown(f"**Duration:** {itinerary['days']} days")
+                    st.markdown(f"**Theme:** {itinerary['theme']}")
+                with col2:
+                    st.markdown(f"**Budget:** ฿{itinerary['budget']} THB")
+                    st.markdown(f"**Best For:** {', '.join(itinerary['best_for'])}")
+                
+                st.markdown("### Highlights")
+                for highlight in itinerary['highlights']:
+                    st.markdown(f"- {highlight}")
+                
+                st.markdown("### Daily Plan")
+                for i, day in enumerate(itinerary['daily_plan'], 1):
+                    with st.expander(f"Day {i}: {day['title']}"):
+                        st.markdown(f"**Morning:** {day['morning']}")
+                        st.markdown(f"**Afternoon:** {day['afternoon']}")
+                        st.markdown(f"**Evening:** {day['evening']}")
+                
+                # Button to discuss this itinerary in chat
+                if st.button("Discuss This Itinerary", key="discuss_itinerary"):
+                    prompt = f"Let's talk about this {itinerary['title']} itinerary. I have questions about it."
+                    st.session_state.quick_prompt = prompt
+                    # Clear selected itinerary
+                    del st.session_state.selected_itinerary
+                    # Switch to chat tab
+                    st.rerun()
+                
+                # Back button
+                if st.button("← Back to Itineraries", key="back_to_list"):
+                    del st.session_state.selected_itinerary
+                    st.rerun()
 
         # Process scheduled input or direct user input
         process_input = None
@@ -721,6 +889,15 @@ else:
                 return "\n".join(all_items)
 
             data_snippet = format_data_snippet(local_data)
+            
+            # Get relevant itineraries based on user query
+            relevant_itineraries = query_similar_itineraries(chroma_collection, process_input, n_results=2)
+            itinerary_info = ""
+            
+            if relevant_itineraries:
+                itinerary_info = "Relevant Thailand Itineraries:\n"
+                for itin in relevant_itineraries:
+                    itinerary_info += f"- {itin['title']} ({itin['days']} days): Budget ฿{itin['budget']} - {', '.join(itin['highlights'][:2])}\n"
 
             # Get only the most recent messages from current chat
             past_chat = ""
@@ -737,8 +914,6 @@ else:
             prompt = f"""
 You are Owl, a smart travel assistant + local friend helping visitors explore Bangkok.
 Your job is to guide them like a local travel agent would — recommending places, planning routes, explaining logistics, and making everything feel easy and personal. Avoid vague touristy suggestions — always be specific, accurate, and street-smart.
-
-
 
 You combine the local expertise of a friend with the organization and intelligence of a travel agent.
 
@@ -757,8 +932,11 @@ In their language
 Use:
 The Bangkok database (places to eat, stay, shop, visit, etc.)
 Your own built-in knowledge (neighborhoods, transportation, logistics, culture, current trends)
+The relevant Thailand itineraries when appropriate
 
-Always combine both to give the best, most confident answers. If a place is in the database, prefer it. If not, back it up with your own insights
+Always combine all sources to give the best, most confident answers. If a place is in the database, prefer it. If not, back it up with your own insights.
+
+{itinerary_info}
 
 📏 GUIDING PRINCIPLES
 
@@ -771,9 +949,9 @@ Respect the user's language, budget, time, and location
 Never sound robotic or scripted
 Never overwhelm — pick the top 3–5 best options, not long lists
 
+When a user asks about planning a trip or itinerary, mention that they can check out the Itineraries tab for curated Thailand travel plans.
 
 End every reply with: 🦉
-
 
 IMPORTANT: I need you to format recommendations as HTML cards using this exact structure:
 
