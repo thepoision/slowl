@@ -621,3 +621,22 @@ def initialize_db():
     itineraries = load_sample_itineraries()
     add_itineraries_to_collection(collection, itineraries)
     return collection
+def query_similar_itineraries(query_text, collection_name="bangkok_itineraries", top_k=3):
+    """Query ChromaDB for similar itineraries"""
+    client = get_chroma_client()
+    collection = client.get_collection(collection_name)
+
+    results = collection.query(
+        query_texts=[query_text],
+        n_results=top_k
+    )
+
+    # Process results
+    itineraries = []
+    if results and len(results['metadatas']) > 0:
+        for metadata in results['metadatas'][0]:
+            if 'full_data' in metadata:
+                itinerary = json.loads(metadata['full_data'])
+                itineraries.append(itinerary)
+
+    return itineraries
