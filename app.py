@@ -5,7 +5,7 @@ import json
 import datetime
 import re
 # Add ChromaDB imports
-from chroma_utils import initialize_chroma_collection, query_similar_itineraries
+from chroma_utils import initialize_itineraries_collection, query_similar_itineraries
 
 # --- Page Configuration with owl theme ---
 st.set_page_config(
